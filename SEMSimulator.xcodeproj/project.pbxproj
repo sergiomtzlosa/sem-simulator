@@ -1,0 +1,761 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B3B5D23264E6336BCC036A5 /* SEMControlServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F704A2F9F413036F4CB4FDD /* SEMControlServer.m */; };
+		0B94711CF897C7FF65552A87 /* SEMPhysicsEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E5DFA4DFD2C85BC28AA1D101 /* SEMPhysicsEngine.m */; };
+		182BF403A37B510D3F1BFCA4 /* ConsoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5444ADDCBF219BCA7D298C5 /* ConsoleView.m */; };
+		1E9F474E840D9311B83C623E /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE8E2DFC2EB2D5D2C1F4DAD2 /* Metal.framework */; };
+		200BAA7E9FDD8BABF388C77B /* TelemetryRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E98DECA4CC68294020DE596 /* TelemetryRenderer.m */; };
+		317886659A71B32190D4F6F4 /* ProceduralSampleGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0007ACB7A625FD3A0BEEE6C3 /* ProceduralSampleGenerator.m */; };
+		32C927F449D7D8BECF7643F8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C924FF3DF6652053A3A48E62 /* CoreImage.framework */; };
+		36F24DAD3EE07D1D0EF76172 /* SemanticPromptParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 24E72B33CB406B08CB206D2D /* SemanticPromptParser.m */; };
+		3E52B36B4BD90BCED16AF17E /* OpenCodeIntegration.m in Sources */ = {isa = PBXBuildFile; fileRef = 69578D6C9D84E21F98096374 /* OpenCodeIntegration.m */; };
+		421153D6F266653FDB89666C /* SEMRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A012A39F1B11BEDA94AA773 /* SEMRenderer.m */; };
+		4B1B563380A981488E621BB9 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAFA9AB4200235A20C7AD54F /* MetalKit.framework */; };
+		4BB20F905B3750055FE568D1 /* SEMSpecimen.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D2EB2C519227A58BE1ABC0 /* SEMSpecimen.m */; };
+		4BB5966C20C07C4E1473D66F /* RockerSwitchControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8B540476BB60A17943520 /* RockerSwitchControl.m */; };
+		533BCA06E6A1B38061EF2DB3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473153A0A158395DC077C457 /* QuartzCore.framework */; };
+		5F0E1D3D0E6C5BA9F3D40BBD /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 324BC6B1A86283919CEA2C34 /* Accelerate.framework */; };
+		65ECAD2988291D29E80051B1 /* SEMSimulatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A32F69908235CB60A5600760 /* SEMSimulatorTests.m */; };
+		6BAE240638196DC4E4D0CEAA /* SettingsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FBEC276DD1A6CBDCC791BA /* SettingsWindowController.m */; };
+		6BB8049018C96C84FD9D0E37 /* AISampleDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD1602E01BEE2052402671E /* AISampleDrawer.m */; };
+		6D0F53BB6A6646C61F3BC53C /* SEMScaleMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A1A7DB36E45C354B45F54 /* SEMScaleMath.m */; };
+		728CE2DD3C4CC2B37DEFE4E5 /* HelpWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BB930EECAAC4BED73951EBB5 /* HelpWindowController.m */; };
+		734E82DA785A2993EDA522E9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A088CD48EBDF68A8079D82B3 /* Security.framework */; };
+		751AE73CF8884C94B50F31FA /* SavedSpecimenStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 9196586F585943128B714CBF /* SavedSpecimenStore.m */; };
+		7972D11D526ED57AD8446682 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE8E2DFC2EB2D5D2C1F4DAD2 /* Metal.framework */; };
+		7C1D483AB1554EA7C951BC2F /* VoltageSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B673285FC42E678457D7EFB /* VoltageSelectorView.m */; };
+		82245C99F635B2C6E9A44BA1 /* MainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D989D2D9D837D66CF024F4 /* MainWindowController.m */; };
+		856D8C3584D60C0F64C5FF2B /* MetalCRTView.m in Sources */ = {isa = PBXBuildFile; fileRef = 97434C7D1AE9E657A109A2BE /* MetalCRTView.m */; };
+		85EB1E3B9FAC55E7AA8F96EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C3180ECD78225B32109C6D /* main.m */; };
+		8B1221DD8B5632BBCD21E54B /* AISampleRecipe.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA1E847CB68E439B939F1A3 /* AISampleRecipe.m */; };
+		92EC44B2575A8BB270327E70 /* ShaderTypes.h in Resources */ = {isa = PBXBuildFile; fileRef = ED774A58C09DF5189F0D4B58 /* ShaderTypes.h */; };
+		9405F9C49C79DD42FC5049AF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 15A9E125964CD6AD47283F09 /* AppDelegate.m */; };
+		9DE8C2881B197D79AFCFDEB6 /* PressureGaugeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2186232F758E96ECA47224EB /* PressureGaugeView.m */; };
+		AA9F53C2383A99E5B88CD450 /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 4340CB018173BF8D853CD523 /* Theme.m */; };
+		AF75EE21259A27DB2DAC8562 /* AISampleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0D700965D6A9191F8656DF /* AISampleManager.m */; };
+		B16F73CD397BC775A40CB17C /* CRTShaders.metal.txt in Resources */ = {isa = PBXBuildFile; fileRef = A8ED214D94488263F19BD54D /* CRTShaders.metal.txt */; };
+		C84A9A3F708F3ABC6E0392D5 /* KeychainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A05F6C92650E1B3462AF30C9 /* KeychainStore.m */; };
+		C96334B9DCD0AE9DC78E719A /* PanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D44A9E644219FA0926F3D3 /* PanelView.m */; };
+		CBC7B77CE1DBE2D28977FE0A /* SpecimenLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F3D7A9645F9A145044991E /* SpecimenLibrary.m */; };
+		CBEA590A9120C85DEFC4C395 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 24A0C25843D5AB7C4180E4A2 /* AppIcon.icns */; };
+		CE5EA99CE9C5747919692A69 /* LEDIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1C5C904A2052D969FDD2B03 /* LEDIndicatorView.m */; };
+		D81AB381646B2388FED00BEC /* RotaryKnobControl.m in Sources */ = {isa = PBXBuildFile; fileRef = A56FC63381517E405D297EAE /* RotaryKnobControl.m */; };
+		E2435B390AFA84712A750492 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE0775302824EFF80BA19ADC /* Cocoa.framework */; };
+		ECE1EC843E0EAFDA7CAC6EDB /* SEMShaders.metal.txt in Resources */ = {isa = PBXBuildFile; fileRef = A37FF16684A6E7D36011BA16 /* SEMShaders.metal.txt */; };
+		F7315EEA2FCE1EB21AA57B3E /* BuiltInModels.json in Resources */ = {isa = PBXBuildFile; fileRef = 408ECCE4D5E0201FBE91421B /* BuiltInModels.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		09CF91C66D0E9C352CD712EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAB5168AE54EBA21D2016FCC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C55B1D302A92C1CC3179CAA6;
+			remoteInfo = SEMSimulator;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0007ACB7A625FD3A0BEEE6C3 /* ProceduralSampleGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProceduralSampleGenerator.m; sourceTree = "<group>"; };
+		03C3180ECD78225B32109C6D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		064A1A7DB36E45C354B45F54 /* SEMScaleMath.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEMScaleMath.m; sourceTree = "<group>"; };
+		0A827A43419BC5CC179F138C /* AISampleDrawer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AISampleDrawer.h; sourceTree = "<group>"; };
+		105755AC44D7D13B782F7A7E /* SEMControlServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEMControlServer.h; sourceTree = "<group>"; };
+		12D534EC4E70BCB57E35AA74 /* MetalCRTView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetalCRTView.h; sourceTree = "<group>"; };
+		15A9E125964CD6AD47283F09 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		173357D2B44D03B070AE6A0B /* AISampleManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AISampleManager.h; sourceTree = "<group>"; };
+		1D0D700965D6A9191F8656DF /* AISampleManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AISampleManager.m; sourceTree = "<group>"; };
+		2186232F758E96ECA47224EB /* PressureGaugeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PressureGaugeView.m; sourceTree = "<group>"; };
+		21D2EB2C519227A58BE1ABC0 /* SEMSpecimen.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEMSpecimen.m; sourceTree = "<group>"; };
+		24A0C25843D5AB7C4180E4A2 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		24E72B33CB406B08CB206D2D /* SemanticPromptParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SemanticPromptParser.m; sourceTree = "<group>"; };
+		255AC1D19E54BD0B8D497A09 /* RockerSwitchControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RockerSwitchControl.h; sourceTree = "<group>"; };
+		26B1B311F14B23E6EFEA03E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2D5348CE47025D53B50A4FA9 /* TelemetryRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelemetryRenderer.h; sourceTree = "<group>"; };
+		324BC6B1A86283919CEA2C34 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		3518C743B24748FD1DAC6EA2 /* SEMTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEMTypes.h; sourceTree = "<group>"; };
+		38A51B1B560FE6087703C73B /* PressureGaugeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PressureGaugeView.h; sourceTree = "<group>"; };
+		3AD1602E01BEE2052402671E /* AISampleDrawer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AISampleDrawer.m; sourceTree = "<group>"; };
+		408ECCE4D5E0201FBE91421B /* BuiltInModels.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BuiltInModels.json; sourceTree = "<group>"; };
+		4340CB018173BF8D853CD523 /* Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Theme.m; sourceTree = "<group>"; };
+		44E237727EB9A3F0A3F4C6D8 /* HelpWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelpWindowController.h; sourceTree = "<group>"; };
+		473153A0A158395DC077C457 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4A355A979FF90816710CCCFE /* ProceduralSampleGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProceduralSampleGenerator.h; sourceTree = "<group>"; };
+		4AD0C4780E134E5AD664F82B /* SEMSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SEMSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EB8B540476BB60A17943520 /* RockerSwitchControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RockerSwitchControl.m; sourceTree = "<group>"; };
+		4ED957AEFF214ED513630A4C /* SemanticPromptParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SemanticPromptParser.h; sourceTree = "<group>"; };
+		556A436CED6CBD88F9ED2414 /* LEDIndicatorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LEDIndicatorView.h; sourceTree = "<group>"; };
+		5BA1E847CB68E439B939F1A3 /* AISampleRecipe.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AISampleRecipe.m; sourceTree = "<group>"; };
+		5F704A2F9F413036F4CB4FDD /* SEMControlServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEMControlServer.m; sourceTree = "<group>"; };
+		608C9FE0FE3D16875CAE3055 /* SEMRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEMRenderer.h; sourceTree = "<group>"; };
+		6259692ABCA06690E48000A7 /* SettingsWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsWindowController.h; sourceTree = "<group>"; };
+		66E307D28AC8D0C8D18BDC5B /* OpenCodeIntegration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCodeIntegration.h; sourceTree = "<group>"; };
+		69578D6C9D84E21F98096374 /* OpenCodeIntegration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenCodeIntegration.m; sourceTree = "<group>"; };
+		747FB158FBA54D8FE7881E53 /* ConsoleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConsoleView.h; sourceTree = "<group>"; };
+		7A012A39F1B11BEDA94AA773 /* SEMRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEMRenderer.m; sourceTree = "<group>"; };
+		7ABB1A98E85554AB9C7A41FC /* RotaryKnobControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RotaryKnobControl.h; sourceTree = "<group>"; };
+		7E98DECA4CC68294020DE596 /* TelemetryRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TelemetryRenderer.m; sourceTree = "<group>"; };
+		80416681D751C59830A7C696 /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Theme.h; sourceTree = "<group>"; };
+		8743B0C935B96CE60CE2CF60 /* AISampleRecipe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AISampleRecipe.h; sourceTree = "<group>"; };
+		8AEEEFE8D24746A98E1E4F02 /* SEMPhysicsEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEMPhysicsEngine.h; sourceTree = "<group>"; };
+		8B673285FC42E678457D7EFB /* VoltageSelectorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoltageSelectorView.m; sourceTree = "<group>"; };
+		9196586F585943128B714CBF /* SavedSpecimenStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SavedSpecimenStore.m; sourceTree = "<group>"; };
+		91D425297A74B9950632F058 /* PanelView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PanelView.h; sourceTree = "<group>"; };
+		97434C7D1AE9E657A109A2BE /* MetalCRTView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetalCRTView.m; sourceTree = "<group>"; };
+		9904FD97E108501E8A27C987 /* SEMSpecimen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEMSpecimen.h; sourceTree = "<group>"; };
+		A05F6C92650E1B3462AF30C9 /* KeychainStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeychainStore.m; sourceTree = "<group>"; };
+		A088CD48EBDF68A8079D82B3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A32F69908235CB60A5600760 /* SEMSimulatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEMSimulatorTests.m; sourceTree = "<group>"; };
+		A37FF16684A6E7D36011BA16 /* SEMShaders.metal.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SEMShaders.metal.txt; sourceTree = "<group>"; };
+		A56FC63381517E405D297EAE /* RotaryKnobControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RotaryKnobControl.m; sourceTree = "<group>"; };
+		A84B0AEE2E6C3723F47DA44F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A8ED214D94488263F19BD54D /* CRTShaders.metal.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CRTShaders.metal.txt; sourceTree = "<group>"; };
+		AAFA9AB4200235A20C7AD54F /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		AB4EE4282484D112F472234D /* KeychainStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeychainStore.h; sourceTree = "<group>"; };
+		AE0775302824EFF80BA19ADC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		B1E4F75C4DA2FD2E011E875C /* SEMScaleMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEMScaleMath.h; sourceTree = "<group>"; };
+		B9FBEC276DD1A6CBDCC791BA /* SettingsWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsWindowController.m; sourceTree = "<group>"; };
+		BB930EECAAC4BED73951EBB5 /* HelpWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelpWindowController.m; sourceTree = "<group>"; };
+		BCFA9AD3A00D31CAB702E951 /* MainWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainWindowController.h; sourceTree = "<group>"; };
+		C5D44A9E644219FA0926F3D3 /* PanelView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PanelView.m; sourceTree = "<group>"; };
+		C65D148690D17EB32F2D20AC /* SEMSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SEMSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C924FF3DF6652053A3A48E62 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		CB44AB6290841B303B4FC1A1 /* SpecimenLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpecimenLibrary.h; sourceTree = "<group>"; };
+		D087D468B1DCEA9C68EA6AE1 /* SavedSpecimenStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SavedSpecimenStore.h; sourceTree = "<group>"; };
+		D6D989D2D9D837D66CF024F4 /* MainWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainWindowController.m; sourceTree = "<group>"; };
+		E1C5C904A2052D969FDD2B03 /* LEDIndicatorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LEDIndicatorView.m; sourceTree = "<group>"; };
+		E5DFA4DFD2C85BC28AA1D101 /* SEMPhysicsEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEMPhysicsEngine.m; sourceTree = "<group>"; };
+		ED774A58C09DF5189F0D4B58 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		F1F3D7A9645F9A145044991E /* SpecimenLibrary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpecimenLibrary.m; sourceTree = "<group>"; };
+		F363E1F9F31A73EE10811519 /* VoltageSelectorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoltageSelectorView.h; sourceTree = "<group>"; };
+		F5444ADDCBF219BCA7D298C5 /* ConsoleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConsoleView.m; sourceTree = "<group>"; };
+		FE8E2DFC2EB2D5D2C1F4DAD2 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		33ABB1D84336F0D82A45322C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E9F474E840D9311B83C623E /* Metal.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F57158FC3C1B63D8556853F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2435B390AFA84712A750492 /* Cocoa.framework in Frameworks */,
+				7972D11D526ED57AD8446682 /* Metal.framework in Frameworks */,
+				4B1B563380A981488E621BB9 /* MetalKit.framework in Frameworks */,
+				533BCA06E6A1B38061EF2DB3 /* QuartzCore.framework in Frameworks */,
+				32C927F449D7D8BECF7643F8 /* CoreImage.framework in Frameworks */,
+				5F0E1D3D0E6C5BA9F3D40BBD /* Accelerate.framework in Frameworks */,
+				734E82DA785A2993EDA522E9 /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		10C8D76F169810DECD9F730F /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				12D534EC4E70BCB57E35AA74 /* MetalCRTView.h */,
+				97434C7D1AE9E657A109A2BE /* MetalCRTView.m */,
+				608C9FE0FE3D16875CAE3055 /* SEMRenderer.h */,
+				7A012A39F1B11BEDA94AA773 /* SEMRenderer.m */,
+				2D5348CE47025D53B50A4FA9 /* TelemetryRenderer.h */,
+				7E98DECA4CC68294020DE596 /* TelemetryRenderer.m */,
+				446825E9DF44A07CABD890C1 /* Shaders */,
+			);
+			path = Rendering;
+			sourceTree = "<group>";
+		};
+		11752445D01922478E19CE1E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				24A0C25843D5AB7C4180E4A2 /* AppIcon.icns */,
+				408ECCE4D5E0201FBE91421B /* BuiltInModels.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2081CF566C9B43EBC2BACBA0 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				173357D2B44D03B070AE6A0B /* AISampleManager.h */,
+				1D0D700965D6A9191F8656DF /* AISampleManager.m */,
+				8743B0C935B96CE60CE2CF60 /* AISampleRecipe.h */,
+				5BA1E847CB68E439B939F1A3 /* AISampleRecipe.m */,
+				AB4EE4282484D112F472234D /* KeychainStore.h */,
+				A05F6C92650E1B3462AF30C9 /* KeychainStore.m */,
+				4A355A979FF90816710CCCFE /* ProceduralSampleGenerator.h */,
+				0007ACB7A625FD3A0BEEE6C3 /* ProceduralSampleGenerator.m */,
+				D087D468B1DCEA9C68EA6AE1 /* SavedSpecimenStore.h */,
+				9196586F585943128B714CBF /* SavedSpecimenStore.m */,
+				4ED957AEFF214ED513630A4C /* SemanticPromptParser.h */,
+				24E72B33CB406B08CB206D2D /* SemanticPromptParser.m */,
+				CB44AB6290841B303B4FC1A1 /* SpecimenLibrary.h */,
+				F1F3D7A9645F9A145044991E /* SpecimenLibrary.m */,
+			);
+			path = AI;
+			sourceTree = "<group>";
+		};
+		446825E9DF44A07CABD890C1 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				A8ED214D94488263F19BD54D /* CRTShaders.metal.txt */,
+				A37FF16684A6E7D36011BA16 /* SEMShaders.metal.txt */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		4E170F862936B29282560BA1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				44E237727EB9A3F0A3F4C6D8 /* HelpWindowController.h */,
+				BB930EECAAC4BED73951EBB5 /* HelpWindowController.m */,
+				6259692ABCA06690E48000A7 /* SettingsWindowController.h */,
+				B9FBEC276DD1A6CBDCC791BA /* SettingsWindowController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		51C294B74C6AB741B83EB9CD /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				105755AC44D7D13B782F7A7E /* SEMControlServer.h */,
+				5F704A2F9F413036F4CB4FDD /* SEMControlServer.m */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		60A9918AA750C91039BC4FBE /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				8AEEEFE8D24746A98E1E4F02 /* SEMPhysicsEngine.h */,
+				E5DFA4DFD2C85BC28AA1D101 /* SEMPhysicsEngine.m */,
+				B1E4F75C4DA2FD2E011E875C /* SEMScaleMath.h */,
+				064A1A7DB36E45C354B45F54 /* SEMScaleMath.m */,
+				9904FD97E108501E8A27C987 /* SEMSpecimen.h */,
+				21D2EB2C519227A58BE1ABC0 /* SEMSpecimen.m */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		75FCDD139C2AF4A189E087DA = {
+			isa = PBXGroup;
+			children = (
+				A54D3D9919079C1CF717F001 /* SEMSimulator */,
+				ECB94C9C2579EEFA8085D55D /* SEMSimulatorTests */,
+				E4C962ECB816D5503F8351FB /* Frameworks */,
+				A9555DDDF43280F1D7E11EAA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8D20C31096F5281B7E75E5EF /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				66E307D28AC8D0C8D18BDC5B /* OpenCodeIntegration.h */,
+				69578D6C9D84E21F98096374 /* OpenCodeIntegration.m */,
+			);
+			path = Integration;
+			sourceTree = "<group>";
+		};
+		9D5BAC0C0D4A90C66BFF26F3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				0A827A43419BC5CC179F138C /* AISampleDrawer.h */,
+				3AD1602E01BEE2052402671E /* AISampleDrawer.m */,
+				747FB158FBA54D8FE7881E53 /* ConsoleView.h */,
+				F5444ADDCBF219BCA7D298C5 /* ConsoleView.m */,
+				556A436CED6CBD88F9ED2414 /* LEDIndicatorView.h */,
+				E1C5C904A2052D969FDD2B03 /* LEDIndicatorView.m */,
+				91D425297A74B9950632F058 /* PanelView.h */,
+				C5D44A9E644219FA0926F3D3 /* PanelView.m */,
+				38A51B1B560FE6087703C73B /* PressureGaugeView.h */,
+				2186232F758E96ECA47224EB /* PressureGaugeView.m */,
+				255AC1D19E54BD0B8D497A09 /* RockerSwitchControl.h */,
+				4EB8B540476BB60A17943520 /* RockerSwitchControl.m */,
+				7ABB1A98E85554AB9C7A41FC /* RotaryKnobControl.h */,
+				A56FC63381517E405D297EAE /* RotaryKnobControl.m */,
+				F363E1F9F31A73EE10811519 /* VoltageSelectorView.h */,
+				8B673285FC42E678457D7EFB /* VoltageSelectorView.m */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		A54D3D9919079C1CF717F001 /* SEMSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				A84B0AEE2E6C3723F47DA44F /* AppDelegate.h */,
+				15A9E125964CD6AD47283F09 /* AppDelegate.m */,
+				26B1B311F14B23E6EFEA03E7 /* Info.plist */,
+				03C3180ECD78225B32109C6D /* main.m */,
+				BCFA9AD3A00D31CAB702E951 /* MainWindowController.h */,
+				D6D989D2D9D837D66CF024F4 /* MainWindowController.m */,
+				2081CF566C9B43EBC2BACBA0 /* AI */,
+				51C294B74C6AB741B83EB9CD /* Control */,
+				4E170F862936B29282560BA1 /* Controllers */,
+				60A9918AA750C91039BC4FBE /* Engine */,
+				8D20C31096F5281B7E75E5EF /* Integration */,
+				10C8D76F169810DECD9F730F /* Rendering */,
+				11752445D01922478E19CE1E /* Resources */,
+				FAB8D0A789BE8126DE46AA48 /* Shared */,
+				9D5BAC0C0D4A90C66BFF26F3 /* UI */,
+			);
+			path = SEMSimulator;
+			sourceTree = "<group>";
+		};
+		A9555DDDF43280F1D7E11EAA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C65D148690D17EB32F2D20AC /* SEMSimulator.app */,
+				4AD0C4780E134E5AD664F82B /* SEMSimulatorTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4C962ECB816D5503F8351FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				324BC6B1A86283919CEA2C34 /* Accelerate.framework */,
+				AE0775302824EFF80BA19ADC /* Cocoa.framework */,
+				C924FF3DF6652053A3A48E62 /* CoreImage.framework */,
+				FE8E2DFC2EB2D5D2C1F4DAD2 /* Metal.framework */,
+				AAFA9AB4200235A20C7AD54F /* MetalKit.framework */,
+				473153A0A158395DC077C457 /* QuartzCore.framework */,
+				A088CD48EBDF68A8079D82B3 /* Security.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ECB94C9C2579EEFA8085D55D /* SEMSimulatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				A32F69908235CB60A5600760 /* SEMSimulatorTests.m */,
+			);
+			path = SEMSimulatorTests;
+			sourceTree = "<group>";
+		};
+		FAB8D0A789BE8126DE46AA48 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				3518C743B24748FD1DAC6EA2 /* SEMTypes.h */,
+				ED774A58C09DF5189F0D4B58 /* ShaderTypes.h */,
+				80416681D751C59830A7C696 /* Theme.h */,
+				4340CB018173BF8D853CD523 /* Theme.m */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C55B1D302A92C1CC3179CAA6 /* SEMSimulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 212CEA0AA560EA29F9540DAC /* Build configuration list for PBXNativeTarget "SEMSimulator" */;
+			buildPhases = (
+				6A5AE3A6C59C002C8E7E2A31 /* Sources */,
+				1B479BAD47EA6CD2289BD228 /* Resources */,
+				F57158FC3C1B63D8556853F4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SEMSimulator;
+			packageProductDependencies = (
+			);
+			productName = SEMSimulator;
+			productReference = C65D148690D17EB32F2D20AC /* SEMSimulator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FAD21EA57B246568D70F88EE /* SEMSimulatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C6AF23E13BF12353727094C /* Build configuration list for PBXNativeTarget "SEMSimulatorTests" */;
+			buildPhases = (
+				7E013AD61B9F29015EA22CDA /* Sources */,
+				33ABB1D84336F0D82A45322C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				52B504FC643DC436181FCE03 /* PBXTargetDependency */,
+			);
+			name = SEMSimulatorTests;
+			packageProductDependencies = (
+			);
+			productName = SEMSimulatorTests;
+			productReference = 4AD0C4780E134E5AD664F82B /* SEMSimulatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FAB5168AE54EBA21D2016FCC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C55B1D302A92C1CC3179CAA6 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+					FAD21EA57B246568D70F88EE = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 472F62BD5122A1AADEF35ACB /* Build configuration list for PBXProject "SEMSimulator" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 75FCDD139C2AF4A189E087DA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A9555DDDF43280F1D7E11EAA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C55B1D302A92C1CC3179CAA6 /* SEMSimulator */,
+				FAD21EA57B246568D70F88EE /* SEMSimulatorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1B479BAD47EA6CD2289BD228 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBEA590A9120C85DEFC4C395 /* AppIcon.icns in Resources */,
+				F7315EEA2FCE1EB21AA57B3E /* BuiltInModels.json in Resources */,
+				B16F73CD397BC775A40CB17C /* CRTShaders.metal.txt in Resources */,
+				ECE1EC843E0EAFDA7CAC6EDB /* SEMShaders.metal.txt in Resources */,
+				92EC44B2575A8BB270327E70 /* ShaderTypes.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6A5AE3A6C59C002C8E7E2A31 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BB8049018C96C84FD9D0E37 /* AISampleDrawer.m in Sources */,
+				AF75EE21259A27DB2DAC8562 /* AISampleManager.m in Sources */,
+				8B1221DD8B5632BBCD21E54B /* AISampleRecipe.m in Sources */,
+				9405F9C49C79DD42FC5049AF /* AppDelegate.m in Sources */,
+				182BF403A37B510D3F1BFCA4 /* ConsoleView.m in Sources */,
+				728CE2DD3C4CC2B37DEFE4E5 /* HelpWindowController.m in Sources */,
+				C84A9A3F708F3ABC6E0392D5 /* KeychainStore.m in Sources */,
+				CE5EA99CE9C5747919692A69 /* LEDIndicatorView.m in Sources */,
+				82245C99F635B2C6E9A44BA1 /* MainWindowController.m in Sources */,
+				856D8C3584D60C0F64C5FF2B /* MetalCRTView.m in Sources */,
+				3E52B36B4BD90BCED16AF17E /* OpenCodeIntegration.m in Sources */,
+				C96334B9DCD0AE9DC78E719A /* PanelView.m in Sources */,
+				9DE8C2881B197D79AFCFDEB6 /* PressureGaugeView.m in Sources */,
+				317886659A71B32190D4F6F4 /* ProceduralSampleGenerator.m in Sources */,
+				4BB5966C20C07C4E1473D66F /* RockerSwitchControl.m in Sources */,
+				D81AB381646B2388FED00BEC /* RotaryKnobControl.m in Sources */,
+				0B3B5D23264E6336BCC036A5 /* SEMControlServer.m in Sources */,
+				0B94711CF897C7FF65552A87 /* SEMPhysicsEngine.m in Sources */,
+				421153D6F266653FDB89666C /* SEMRenderer.m in Sources */,
+				6D0F53BB6A6646C61F3BC53C /* SEMScaleMath.m in Sources */,
+				4BB20F905B3750055FE568D1 /* SEMSpecimen.m in Sources */,
+				751AE73CF8884C94B50F31FA /* SavedSpecimenStore.m in Sources */,
+				36F24DAD3EE07D1D0EF76172 /* SemanticPromptParser.m in Sources */,
+				6BAE240638196DC4E4D0CEAA /* SettingsWindowController.m in Sources */,
+				CBC7B77CE1DBE2D28977FE0A /* SpecimenLibrary.m in Sources */,
+				200BAA7E9FDD8BABF388C77B /* TelemetryRenderer.m in Sources */,
+				AA9F53C2383A99E5B88CD450 /* Theme.m in Sources */,
+				7C1D483AB1554EA7C951BC2F /* VoltageSelectorView.m in Sources */,
+				85EB1E3B9FAC55E7AA8F96EA /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E013AD61B9F29015EA22CDA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65ECAD2988291D29E80051B1 /* SEMSimulatorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		52B504FC643DC436181FCE03 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C55B1D302A92C1CC3179CAA6 /* SEMSimulator */;
+			targetProxy = 09CF91C66D0E9C352CD712EE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		03A12CA56A27EF84A73B3B48 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		05CDA435D10C03B722E62A40 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SEMSimulator/Shared",
+					"$(SRCROOT)/SEMSimulator/Control",
+					"$(SRCROOT)/SEMSimulator/Integration",
+				);
+				INFOPLIST_FILE = SEMSimulator/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.semsimulator.app;
+				PRODUCT_NAME = "SEM Simulator";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		BD89F14AC61B64BAD9933B31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SEMSimulator",
+					"$(SRCROOT)/SEMSimulator/Engine",
+					"$(SRCROOT)/SEMSimulator/AI",
+					"$(SRCROOT)/SEMSimulator/Shared",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.semsimulator.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SEM Simulator.app/Contents/MacOS/SEM Simulator";
+			};
+			name = Release;
+		};
+		C310FEA4AC98DE8A6993EFEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D2435816F2DEBBB2D3DCDFBD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SEMSimulator",
+					"$(SRCROOT)/SEMSimulator/Engine",
+					"$(SRCROOT)/SEMSimulator/AI",
+					"$(SRCROOT)/SEMSimulator/Shared",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.semsimulator.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SEM Simulator.app/Contents/MacOS/SEM Simulator";
+			};
+			name = Debug;
+		};
+		FD55D934E779F851EAB80877 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/SEMSimulator/Shared",
+					"$(SRCROOT)/SEMSimulator/Control",
+					"$(SRCROOT)/SEMSimulator/Integration",
+				);
+				INFOPLIST_FILE = SEMSimulator/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.semsimulator.app;
+				PRODUCT_NAME = "SEM Simulator";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C6AF23E13BF12353727094C /* Build configuration list for PBXNativeTarget "SEMSimulatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2435816F2DEBBB2D3DCDFBD /* Debug */,
+				BD89F14AC61B64BAD9933B31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		212CEA0AA560EA29F9540DAC /* Build configuration list for PBXNativeTarget "SEMSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05CDA435D10C03B722E62A40 /* Debug */,
+				FD55D934E779F851EAB80877 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		472F62BD5122A1AADEF35ACB /* Build configuration list for PBXProject "SEMSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03A12CA56A27EF84A73B3B48 /* Debug */,
+				C310FEA4AC98DE8A6993EFEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FAB5168AE54EBA21D2016FCC /* Project object */;
+}

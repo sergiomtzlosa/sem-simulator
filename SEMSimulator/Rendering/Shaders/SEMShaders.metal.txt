@@ -1,0 +1,136 @@
+#include <metal_stdlib>
+#include "ShaderTypes.h"
+using namespace metal;
+
+struct SEMVertexOut {
+    float4 position [[position]];
+    float2 uv;
+};
+
+// Fullscreen triangle. uv (0,0) is the top-left of the render target so that
+// CPU-generated top-down textures and CoreText overlays appear upright.
+vertex SEMVertexOut fullscreenVertex(uint vertexID [[vertex_id]]) {
+    float2 positions[3] = { float2(-1.0, -1.0), float2(3.0, -1.0), float2(-1.0, 3.0) };
+    float2 pos = positions[vertexID];
+    SEMVertexOut out;
+    out.position = float4(pos, 0.0, 1.0);
+    float2 uv = pos * 0.5 + 0.5;
+    out.uv = float2(uv.x, 1.0 - uv.y);
+    return out;
+}
+
+static inline float semHash21(float2 p) {
+    p = fract(p * float2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
+
+static inline float semLuma(float3 c) {
+    return dot(c, float3(0.2126, 0.7152, 0.0722));
+}
+
+fragment float4 specimenFragment(SEMVertexOut in [[stage_in]],
+                                 constant SEMShaderUniforms &u [[buffer(0)]],
+                                 texture2d<float> heightTex [[texture(0)]],
+                                 texture2d<float> normalTex [[texture(1)]],
+                                 texture2d<float> zTex [[texture(2)]],
+                                 texture2d<float> contaminationTex [[texture(3)]]) {
+    constexpr sampler smp(coord::normalized, address::clamp_to_edge, filter::linear);
+
+    // The scan raster is square but is displayed in a 4:3 CRT window, so the
+    // specimen is sampled with a 3:4 horizontal compression to keep geometry
+    // square after the CRT stretch.
+    float2 viewP = (in.uv - 0.5) * float2(0.75, 1.0);
+
+    float cosR = cos(u.rotation);
+    float sinR = sin(u.rotation);
+    float2 rotated = float2(cosR * viewP.x - sinR * viewP.y,
+                            sinR * viewP.x + cosR * viewP.y);
+
+    // Tilt foreshortens the scan in the vertical axis.
+    float tiltCos = clamp(cos(u.tilt), 0.30, 1.0);
+    rotated.y /= tiltCos;
+
+    float2 stig = float2(u.stigmatorX, u.stigmatorY);
+    float stigAmount = length(stig);
+    float2 stigDir = stigAmount > 1.0e-4 ? stig / stigAmount : float2(1.0, 0.0);
+
+    float defocus = (0.0035 + fabs(u.focus) * 0.060 + u.spot * 0.004 + stigAmount * 0.010) * u.viewScale;
+    float2 astigOffset = stigDir * (stigAmount * 0.018 * u.viewScale);
+    float2 perpOffset = float2(-stigDir.y, stigDir.x) * (stigAmount * 0.008 * u.viewScale);
+    float2 baseUV = float2(u.viewCenterX, u.viewCenterY) + rotated * u.viewScale;
+
+    float2 o1 = float2(defocus, 0.0);
+    float2 o2 = float2(0.0, defocus);
+    float2 o3 = astigOffset;
+    float2 o4 = perpOffset;
+
+    float h0 = heightTex.sample(smp, baseUV).r;
+    float h1 = heightTex.sample(smp, baseUV + o1).r;
+    float h2 = heightTex.sample(smp, baseUV - o1).r;
+    float h3 = heightTex.sample(smp, baseUV + o2).r;
+    float h4 = heightTex.sample(smp, baseUV - o2).r;
+    float h5 = heightTex.sample(smp, baseUV + o3).r;
+    float h6 = heightTex.sample(smp, baseUV - o3).r;
+    float h7 = heightTex.sample(smp, baseUV + o4).r;
+    float h8 = heightTex.sample(smp, baseUV - o4).r;
+
+    float h = (h0 * 2.0 + h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8) / 10.0;
+
+    float3 n0 = normalTex.sample(smp, baseUV).xyz * 2.0 - 1.0;
+    float3 n1 = normalTex.sample(smp, baseUV + o1).xyz * 2.0 - 1.0;
+    float3 n2 = normalTex.sample(smp, baseUV - o1).xyz * 2.0 - 1.0;
+    float3 n3 = normalTex.sample(smp, baseUV + o2).xyz * 2.0 - 1.0;
+    float3 n4 = normalTex.sample(smp, baseUV - o2).xyz * 2.0 - 1.0;
+    float3 normal = normalize(n0 * 2.0 + n1 + n2 + n3 + n4);
+    float z = zTex.sample(smp, baseUV).r;
+
+    // Surface detail darkens cavities and keeps high-magnification views alive.
+    float cavity = saturate((0.48 - h) * 1.7);
+    float peak = saturate((h - 0.55) * 1.8);
+
+    float3 lightDir = normalize(float3(-0.48, 0.55, 0.72));
+    float diffuse = saturate(dot(normal, lightDir));
+    float edge = saturate(1.0 - normal.z);
+    float kvNorm = saturate(u.kV / 25.0);
+    float spotNorm = saturate(u.spot / 7.0);
+
+    float se = 0.08 + diffuse * 0.26 + edge * 0.92 + h * 0.20 + peak * 0.10 - cavity * 0.16;
+    se *= mix(1.10, 0.84, kvNorm);
+    se *= 1.0 - spotNorm * 0.16;
+
+    float bse = 0.05 + pow(saturate(z), 1.35) * 1.02 + edge * 0.06 + peak * 0.04;
+    bse *= mix(0.94, 1.10, kvNorm);
+
+    float signal = (u.detectorMode == 1) ? bse : se;
+
+    // Charging: uncoated, non-conductive specimens develop bright flares and
+    // horizontal tearing at high beam current.
+    float chargeFactor = u.charge * (u.goldCoated ? 0.04 : 1.0) * (u.conductive ? 0.18 : 1.0);
+    float tear = pow(semHash21(float2(baseUV.y * 240.0, floor(u.time * 9.0))), 7.0);
+    float flare = semHash21(baseUV * 90.0 + float2(u.time * 0.8, u.time * 1.3));
+    signal += chargeFactor * (0.18 + tear * 0.85 + flare * 0.25) * (0.4 + h * 0.8);
+    signal -= chargeFactor * cavity * 0.20;
+
+    // Persistent contamination: a darker raster mark plus a faint bright rim.
+    float contam = contaminationTex.sample(smp, baseUV).r;
+    float contamEdge = saturate((contam - 0.35) * 2.0);
+    signal *= 1.0 - contam * 0.58;
+    signal += contamEdge * 0.05;
+
+    // Detector noise and beam-current shot noise.
+    float grain = semHash21(in.uv * float2(1024.0, 1024.0) + float2(u.time * 17.0, u.time * 31.0));
+    signal += (grain - 0.5) * (u.noiseAmount + spotNorm * 0.06);
+
+    // Brightness and contrast.
+    signal = (signal - 0.5) * (1.0 + u.contrast * 1.25) + 0.5 + u.brightness * 0.32;
+
+    // Slight scan sweep brightening keeps slow scans legible.
+    if (u.scanMode != 0) {
+        float sweep = exp(-pow((in.uv.y - u.scanProgress) * 620.0, 2.0));
+        signal += sweep * 0.06;
+    }
+
+    signal = saturate(signal);
+    return float4(signal, signal, signal, 1.0);
+}

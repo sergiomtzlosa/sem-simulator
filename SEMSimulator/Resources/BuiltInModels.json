@@ -1,0 +1,369 @@
+{
+  "version": 1,
+  "models": [
+    {
+      "id": "pollen-grain",
+      "name": "Pollen grain",
+      "category": "BIOLOGICAL",
+      "detail": "Spiky exine · non-conductive",
+      "prompt": "pollen grain with spiky exine",
+      "variation": 1101,
+      "recipe": {
+        "name": "Pollen grain",
+        "template": "pollen",
+        "features": {
+          "spikes": 0.82,
+          "pores": 0.55,
+          "roughness": 0.35,
+          "cracks": 0.08,
+          "fibers": 0.02,
+          "grain": 0.20
+        },
+        "material": {
+          "meanZ": 7.2,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 80
+      }
+    },
+    {
+      "id": "diatom-frustule",
+      "name": "Diatom frustule",
+      "category": "BIOLOGICAL",
+      "detail": "Porous silica shell · non-conductive",
+      "prompt": "diatom frustule with porous silica shell",
+      "variation": 1102,
+      "recipe": {
+        "name": "Diatom frustule",
+        "template": "diatom",
+        "features": {
+          "spikes": 0.12,
+          "pores": 0.88,
+          "roughness": 0.28,
+          "cracks": 0.05,
+          "fibers": 0.00,
+          "grain": 0.15
+        },
+        "material": {
+          "meanZ": 11.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 60
+      }
+    },
+    {
+      "id": "fractured-titanium",
+      "name": "Fractured titanium",
+      "category": "MATERIALS",
+      "detail": "Conductive metal fracture",
+      "prompt": "fractured titanium alloy surface",
+      "variation": 1103,
+      "recipe": {
+        "name": "Fractured titanium",
+        "template": "fracture",
+        "features": {
+          "spikes": 0.00,
+          "pores": 0.10,
+          "roughness": 0.55,
+          "cracks": 0.88,
+          "fibers": 0.00,
+          "grain": 0.35
+        },
+        "material": {
+          "meanZ": 22.0,
+          "conductive": true,
+          "coatingRecommended": false
+        },
+        "scaleUm": 40
+      }
+    },
+    {
+      "id": "microchip-traces",
+      "name": "Microchip traces",
+      "category": "MATERIALS",
+      "detail": "Planar circuitry · non-conductive",
+      "prompt": "integrated circuit microchip traces",
+      "variation": 1104,
+      "recipe": {
+        "name": "Microchip traces",
+        "template": "circuit",
+        "features": {
+          "spikes": 0.00,
+          "pores": 0.05,
+          "roughness": 0.18,
+          "cracks": 0.10,
+          "fibers": 0.00,
+          "grain": 0.20
+        },
+        "material": {
+          "meanZ": 16.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 200
+      }
+    },
+    {
+      "id": "volcanic-ash",
+      "name": "Volcanic ash",
+      "category": "GEOLOGICAL",
+      "detail": "Angular glass particles",
+      "prompt": "volcanic ash powder particles",
+      "variation": 1105,
+      "recipe": {
+        "name": "Volcanic ash",
+        "template": "powder",
+        "features": {
+          "spikes": 0.15,
+          "pores": 0.35,
+          "roughness": 0.60,
+          "cracks": 0.25,
+          "fibers": 0.00,
+          "grain": 0.85
+        },
+        "material": {
+          "meanZ": 14.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 100
+      }
+    },
+    {
+      "id": "salt-crystals",
+      "name": "Salt crystals",
+      "category": "GEOLOGICAL",
+      "detail": "Cubic halite facets",
+      "prompt": "salt crystal facets",
+      "variation": 1106,
+      "recipe": {
+        "name": "Salt crystals",
+        "template": "crystal",
+        "features": {
+          "spikes": 0.05,
+          "pores": 0.08,
+          "roughness": 0.32,
+          "cracks": 0.10,
+          "fibers": 0.00,
+          "grain": 0.72
+        },
+        "material": {
+          "meanZ": 18.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 120
+      }
+    },
+    {
+      "id": "carbon-fiber",
+      "name": "Carbon fiber",
+      "category": "MATERIALS",
+      "detail": "Woven conductive fibers",
+      "prompt": "carbon fiber composite",
+      "variation": 1107,
+      "recipe": {
+        "name": "Carbon fiber",
+        "template": "fiber",
+        "features": {
+          "spikes": 0.00,
+          "pores": 0.05,
+          "roughness": 0.50,
+          "cracks": 0.05,
+          "fibers": 0.85,
+          "grain": 0.25
+        },
+        "material": {
+          "meanZ": 6.0,
+          "conductive": true,
+          "coatingRecommended": false
+        },
+        "scaleUm": 150
+      }
+    },
+    {
+      "id": "tissue-section",
+      "name": "Tissue section",
+      "category": "BIOLOGICAL",
+      "detail": "Soft biological surface",
+      "prompt": "biological tissue section",
+      "variation": 1108,
+      "recipe": {
+        "name": "Tissue section",
+        "template": "tissue",
+        "features": {
+          "spikes": 0.05,
+          "pores": 0.42,
+          "roughness": 0.42,
+          "cracks": 0.08,
+          "fibers": 0.15,
+          "grain": 0.20
+        },
+        "material": {
+          "meanZ": 6.5,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 50
+      }
+    },
+    {
+      "id": "bone-trabeculae",
+      "name": "Bone trabeculae",
+      "category": "BIOLOGICAL",
+      "detail": "Mineralized trabecular network",
+      "prompt": "bone tissue surface",
+      "variation": 1109,
+      "recipe": {
+        "name": "Bone trabeculae",
+        "template": "bone",
+        "features": {
+          "spikes": 0.02,
+          "pores": 0.65,
+          "roughness": 0.38,
+          "cracks": 0.12,
+          "fibers": 0.10,
+          "grain": 0.25
+        },
+        "material": {
+          "meanZ": 13.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 90
+      }
+    },
+    {
+      "id": "quartz-sand",
+      "name": "Quartz sand",
+      "category": "GEOLOGICAL",
+      "detail": "Rounded silicate grains",
+      "prompt": "quartz sand grains",
+      "variation": 1110,
+      "recipe": {
+        "name": "Quartz sand",
+        "template": "powder",
+        "features": {
+          "spikes": 0.10,
+          "pores": 0.16,
+          "roughness": 0.42,
+          "cracks": 0.05,
+          "fibers": 0.00,
+          "grain": 0.85
+        },
+        "material": {
+          "meanZ": 14.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 220
+      }
+    },
+    {
+      "id": "rusted-steel",
+      "name": "Rusted steel",
+      "category": "MATERIALS",
+      "detail": "Conductive corrosion product layer",
+      "prompt": "rusted steel surface",
+      "variation": 1111,
+      "recipe": {
+        "name": "Rusted steel",
+        "template": "fracture",
+        "features": {
+          "spikes": 0.05,
+          "pores": 0.52,
+          "roughness": 0.78,
+          "cracks": 0.62,
+          "fibers": 0.05,
+          "grain": 0.40
+        },
+        "material": {
+          "meanZ": 26.0,
+          "conductive": true,
+          "coatingRecommended": false
+        },
+        "scaleUm": 65
+      }
+    },
+    {
+      "id": "sponge-spicule",
+      "name": "Sponge spicule",
+      "category": "BIOLOGICAL",
+      "detail": "Siliceous fiber",
+      "prompt": "sponge spicule fibrous structure",
+      "variation": 1112,
+      "recipe": {
+        "name": "Sponge spicule",
+        "template": "fiber",
+        "features": {
+          "spikes": 0.08,
+          "pores": 0.10,
+          "roughness": 0.35,
+          "cracks": 0.05,
+          "fibers": 0.90,
+          "grain": 0.15
+        },
+        "material": {
+          "meanZ": 11.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 120
+      }
+    },
+    {
+      "id": "foraminifera",
+      "name": "Foraminifera",
+      "category": "GEOLOGICAL",
+      "detail": "Chambered calcite shell",
+      "prompt": "foraminifera calcite shell",
+      "variation": 1113,
+      "recipe": {
+        "name": "Foraminifera",
+        "template": "foram",
+        "features": {
+          "spikes": 0.10,
+          "pores": 0.72,
+          "roughness": 0.30,
+          "cracks": 0.05,
+          "fibers": 0.00,
+          "grain": 0.25
+        },
+        "material": {
+          "meanZ": 11.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 180
+      }
+    },
+    {
+      "id": "butterfly-wing",
+      "name": "Butterfly wing",
+      "category": "BIOLOGICAL",
+      "detail": "Overlapping scales",
+      "prompt": "butterfly wing scales",
+      "variation": 1114,
+      "recipe": {
+        "name": "Butterfly wing",
+        "template": "wing",
+        "features": {
+          "spikes": 0.08,
+          "pores": 0.12,
+          "roughness": 0.30,
+          "cracks": 0.05,
+          "fibers": 0.30,
+          "grain": 0.20
+        },
+        "material": {
+          "meanZ": 8.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 70
+      }
+    }
+  ]
+}

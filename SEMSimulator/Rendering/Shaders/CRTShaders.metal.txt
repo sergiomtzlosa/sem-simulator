@@ -1,0 +1,122 @@
+#include <metal_stdlib>
+#include "ShaderTypes.h"
+using namespace metal;
+
+struct CRTVertexOut {
+    float4 position [[position]];
+    float2 uv;
+};
+
+static inline float crtHash21(float2 p) {
+    p = fract(p * float2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
+
+static inline float crtLuma(float3 c) {
+    return dot(c, float3(0.2126, 0.7152, 0.0722));
+}
+
+static inline float3 crtPhosphor(int mode) {
+    if (mode == 1) return float3(1.00, 0.68, 0.18);
+    if (mode == 2) return float3(0.88, 0.94, 1.00);
+    return float3(0.32, 1.00, 0.46);
+}
+
+fragment float4 crtFragment(CRTVertexOut in [[stage_in]],
+                            constant CRTShaderUniforms &u [[buffer(0)]],
+                            texture2d<float> specimenTex [[texture(0)]],
+                            texture2d<float> historyTex [[texture(1)]],
+                            texture2d<float> overlayTex [[texture(2)]]) {
+    constexpr sampler smp(coord::normalized, address::clamp_to_edge, filter::linear);
+
+    float2 screenUV = in.uv;
+    float aspect = u.width / max(u.height, 1.0);
+
+    // Letterbox the 4:3 raster inside the drawable.
+    float2 box = screenUV;
+    if (aspect > 4.0 / 3.0) {
+        float contentW = (4.0 / 3.0) / aspect;
+        box.x = (screenUV.x - 0.5) / contentW + 0.5;
+    } else {
+        float contentH = aspect / (4.0 / 3.0);
+        box.y = (screenUV.y - 0.5) / contentH + 0.5;
+    }
+    if (box.x < 0.0 || box.x > 1.0 || box.y < 0.0 || box.y > 1.0) {
+        return float4(0.0, 0.0, 0.0, 1.0);
+    }
+
+    float3 tint = crtPhosphor(u.phosphorMode);
+
+    // Barrel distortion and charge-induced beam jitter.
+    float2 p = box - 0.5;
+    float r2 = dot(p, p);
+    p *= 1.0 - u.barrel * r2 * 1.35;
+    float2 warped = p + 0.5;
+
+    float jx = crtHash21(in.position.xy + float2(u.time * 91.0, 7.0)) - 0.5;
+    float jy = crtHash21(in.position.xy + float2(19.0, u.time * 73.0)) - 0.5;
+    warped += float2(jx, jy) * u.charge * 0.0035;
+
+    if (warped.x < 0.0 || warped.x > 1.0 || warped.y < 0.0 || warped.y > 1.0) {
+        return float4(0.0, 0.0, 0.0, 1.0);
+    }
+
+    float3 specimen = specimenTex.sample(smp, warped).rgb;
+    float specimenLum = crtLuma(specimen);
+
+    // A little beam bloom around bright features.
+    float glow = 0.0;
+    glow += crtLuma(specimenTex.sample(smp, warped + float2(0.0022, 0.0)).rgb);
+    glow += crtLuma(specimenTex.sample(smp, warped - float2(0.0022, 0.0)).rgb);
+    glow += crtLuma(specimenTex.sample(smp, warped + float2(0.0, 0.0022)).rgb);
+    glow += crtLuma(specimenTex.sample(smp, warped - float2(0.0, 0.0022)).rgb);
+    glow *= 0.25;
+
+    // Phosphor scanlines.
+    float scanPhase = fabs(sin(warped.y * 768.0 * 3.14159265));
+    float scan = 0.80 + 0.20 * pow(scanPhase, 0.35);
+
+    float beam = u.beamOn ? 1.0 : 0.0;
+    float raster = mix(0.055, 1.0, beam);
+    float3 fresh = tint * (specimenLum * raster + glow * raster * 0.10) * scan;
+    fresh += tint * (crtHash21(in.position.xy + float2(u.time * 51.0, u.time * 13.0)) - 0.5) * u.noiseAmount * beam;
+
+    float persistence = u.beamOn ? u.persistence : 0.0;
+    float3 history = historyTex.sample(smp, screenUV).rgb * persistence;
+    float3 color = max(fresh, history);
+
+    // Slow-scan sweep line and a gentle TV rolling bar.
+    if (u.slowScanning) {
+        float sweep = exp(-pow((warped.y - u.scanProgress) * 680.0, 2.0));
+        color += tint * sweep * 0.42 * u.sweepGlow;
+    }
+    color *= 1.0 + 0.018 * sin(warped.y * 20.0 - u.time * 2.4);
+
+    // Telemetry overlay (premultiplied CoreText output).
+    float4 overlay = overlayTex.sample(smp, warped);
+    color += overlay.rgb * tint * 1.15;
+
+    // Vignette and glass glare.
+    float d = length((warped - 0.5) * float2(1.04, 0.96));
+    color *= 1.0 - smoothstep(0.34, 0.80, d) * 0.58;
+
+    float2 gp = (warped - float2(0.27, 0.21)) * float2(1.0, 1.55);
+    color += tint * exp(-dot(gp, gp) * 26.0) * 0.085;
+
+    float band = exp(-pow((warped.x + warped.y - 0.62) * 5.2, 2.0)) * 0.012;
+    color += tint * band;
+
+    // Very subtle rolling noise in the black level.
+    color += (crtHash21(in.position.xy * 1.7 + u.time) - 0.5) * 0.012;
+
+    return float4(max(color, 0.0), 1.0);
+}
+
+fragment float4 presentFragment(CRTVertexOut in [[stage_in]],
+                                texture2d<float> crtTex [[texture(0)]]) {
+    constexpr sampler smp(coord::normalized, address::clamp_to_edge, filter::linear);
+    float3 color = crtTex.sample(smp, in.uv).rgb;
+    color = pow(max(color, 0.0), float3(1.0 / 1.04));
+    return float4(color, 1.0);
+}

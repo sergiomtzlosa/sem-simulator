@@ -1,0 +1,80 @@
+name: SEMSimulator
+options:
+  bundleIdPrefix: com.semsimulator
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    CLANG_ENABLE_OBJC_ARC: YES
+    CLANG_ENABLE_MODULES: YES
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    GCC_C_LANGUAGE_STANDARD: gnu11
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+targets:
+  SEMSimulator:
+    type: application
+    platform: macOS
+    sources:
+      - path: SEMSimulator
+        excludes:
+          - "Rendering/Shaders/**"
+          - "Shared/ShaderTypes.h"
+      - path: SEMSimulator/Rendering/Shaders/SEMShaders.metal.txt
+        buildPhase: resources
+      - path: SEMSimulator/Rendering/Shaders/CRTShaders.metal.txt
+        buildPhase: resources
+      - path: SEMSimulator/Shared/ShaderTypes.h
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_NAME: SEM Simulator
+        PRODUCT_BUNDLE_IDENTIFIER: com.semsimulator.app
+        INFOPLIST_FILE: SEMSimulator/Info.plist
+        ENABLE_HARDENED_RUNTIME: YES
+        CLANG_WARN_DOCUMENTATION_COMMENTS: NO
+        CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF: NO
+        HEADER_SEARCH_PATHS:
+          - "$(SRCROOT)/SEMSimulator/Shared"
+          - "$(SRCROOT)/SEMSimulator/Control"
+          - "$(SRCROOT)/SEMSimulator/Integration"
+    dependencies:
+      - sdk: Cocoa.framework
+      - sdk: Metal.framework
+      - sdk: MetalKit.framework
+      - sdk: QuartzCore.framework
+      - sdk: CoreImage.framework
+      - sdk: Accelerate.framework
+      - sdk: Security.framework
+  SEMSimulatorTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: SEMSimulatorTests
+    dependencies:
+      - target: SEMSimulator
+      - sdk: Metal.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.semsimulator.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/SEM Simulator.app/Contents/MacOS/SEM Simulator"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        HEADER_SEARCH_PATHS:
+          - "$(SRCROOT)/SEMSimulator"
+          - "$(SRCROOT)/SEMSimulator/Engine"
+          - "$(SRCROOT)/SEMSimulator/AI"
+          - "$(SRCROOT)/SEMSimulator/Shared"
+schemes:
+  SEMSimulator:
+    build:
+      targets:
+        SEMSimulator: all
+        SEMSimulatorTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SEMSimulatorTests

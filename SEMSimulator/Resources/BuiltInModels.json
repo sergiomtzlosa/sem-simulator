@@ -364,6 +364,32 @@
         },
         "scaleUm": 70
       }
+    },
+    {
+      "id": "house-fly",
+      "name": "House fly",
+      "category": "BIOLOGICAL",
+      "detail": "Compound eyes · six legs · wings",
+      "prompt": "house fly",
+      "variation": 1115,
+      "recipe": {
+        "name": "House fly",
+        "template": "insect",
+        "features": {
+          "spikes": 0.10,
+          "pores": 0.10,
+          "roughness": 0.38,
+          "cracks": 0.05,
+          "fibers": 0.00,
+          "grain": 0.25
+        },
+        "material": {
+          "meanZ": 7.0,
+          "conductive": false,
+          "coatingRecommended": true
+        },
+        "scaleUm": 800
+      }
     }
   ]
 }

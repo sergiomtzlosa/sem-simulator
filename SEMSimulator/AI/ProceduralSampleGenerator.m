@@ -81,6 +81,138 @@ static SEMWorley SEMWorleyNoise(float x, float y, uint32_t seed) {
     return (SEMWorley){f1, f2, cell};
 }
 
+static BOOL SEMTextContainsWord(NSString *text, NSString *word) {
+    if (text.length == 0 || word.length == 0) return NO;
+    NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", word.lowercaseString];
+    return [text.lowercaseString rangeOfString:pattern options:NSRegularExpressionSearch].location != NSNotFound;
+}
+
+static float SEMEllipseDistance(float x, float y, float cx, float cy, float rx, float ry) {
+    float dx = (x - cx) / MAX(rx, 0.0001f);
+    float dy = (y - cy) / MAX(ry, 0.0001f);
+    return sqrtf(dx * dx + dy * dy);
+}
+
+static float SEMRotatedEllipseMask(float x, float y, float cx, float cy, float rx, float ry,
+                                   float angle, float softness, float *outLocalX, float *outLocalY) {
+    float dx = x - cx;
+    float dy = y - cy;
+    float c = cosf(angle);
+    float s = sinf(angle);
+    float lx = dx * c + dy * s;
+    float ly = -dx * s + dy * c;
+    if (outLocalX) *outLocalX = lx;
+    if (outLocalY) *outLocalY = ly;
+    float d = sqrtf((lx / MAX(rx, 0.0001f)) * (lx / MAX(rx, 0.0001f)) +
+                    (ly / MAX(ry, 0.0001f)) * (ly / MAX(ry, 0.0001f)));
+    return SEMSmooth(1.0f, 1.0f - softness, d);
+}
+
+static float SEMSegmentDistance(float x, float y, float ax, float ay, float bx, float by) {
+    float pax = x - ax;
+    float pay = y - ay;
+    float bax = bx - ax;
+    float bay = by - ay;
+    float denom = bax * bax + bay * bay;
+    float t = denom > 0.000001f ? SEMClampf((pax * bax + pay * bay) / denom, 0.0f, 1.0f) : 0.0f;
+    float dx = pax - bax * t;
+    float dy = pay - bay * t;
+    return sqrtf(dx * dx + dy * dy);
+}
+
+typedef struct {
+    float headX, headY, headRX, headRY;
+    float thoraxX, thoraxY, thoraxRX, thoraxRY;
+    float abdomenX, abdomenY, abdomenRX, abdomenRY;
+    BOOL hasWings;
+    BOOL hasAntennae;
+    BOOL bigEyes;
+    BOOL splitElytra;
+    BOOL hasWaist;
+    int legCount;
+    float legStartX[8], legStartY[8], legEndX[8], legEndY[8];
+    float legRadius;
+    float wingRX, wingRY, wingAngle;
+    float antennaScale;
+} SEMInsectPlan;
+
+static void SEMConfigureInsectLegPair(SEMInsectPlan *plan, int pair, float startX, float startY,
+                                      float endX, float endY) {
+    plan->legStartX[pair * 2] = 0.5f - startX;
+    plan->legStartY[pair * 2] = startY;
+    plan->legEndX[pair * 2] = 0.5f - endX;
+    plan->legEndY[pair * 2] = endY;
+    plan->legStartX[pair * 2 + 1] = 0.5f + startX;
+    plan->legStartY[pair * 2 + 1] = startY;
+    plan->legEndX[pair * 2 + 1] = 0.5f + endX;
+    plan->legEndY[pair * 2 + 1] = endY;
+}
+
+static SEMInsectPlan SEMInsectPlanForName(NSString *name) {
+    NSString *lower = name.lowercaseString ?: @"";
+    BOOL spider = [lower containsString:@"spider"] || [lower containsString:@"arachnid"] ||
+                  [lower containsString:@"mite"] || [lower containsString:@"tick"];
+    BOOL ant = SEMTextContainsWord(lower, @"ant");
+    BOOL beetle = [lower containsString:@"beetle"] || [lower containsString:@"weevil"] ||
+                  [lower containsString:@"ladybug"];
+    BOOL bigWings = [lower containsString:@"butterfly"] || [lower containsString:@"moth"];
+
+    SEMInsectPlan plan = {0};
+    plan.hasWings = !spider && !ant && !beetle;
+    plan.hasAntennae = !spider;
+    plan.bigEyes = !spider && !ant && !beetle;
+    plan.splitElytra = beetle;
+    plan.hasWaist = ant;
+    plan.wingRX = bigWings ? 0.28f : 0.23f;
+    plan.wingRY = bigWings ? 0.105f : 0.075f;
+    plan.wingAngle = bigWings ? 0.50f : 0.42f;
+    plan.antennaScale = bigWings ? 1.30f : 0.85f;
+
+    if (spider) {
+        plan.antennaScale = 0.0f;
+        plan.headX = 0.5f; plan.headY = 0.36f; plan.headRX = 0.13f; plan.headRY = 0.11f;
+        plan.thoraxX = 0.5f; plan.thoraxY = 0.36f; plan.thoraxRX = 0.13f; plan.thoraxRY = 0.11f;
+        plan.abdomenX = 0.5f; plan.abdomenY = 0.60f; plan.abdomenRX = 0.15f; plan.abdomenRY = 0.18f;
+        plan.legCount = 8;
+        plan.legRadius = 0.010f;
+        SEMConfigureInsectLegPair(&plan, 0, 0.09f, 0.32f, 0.30f, 0.24f);
+        SEMConfigureInsectLegPair(&plan, 1, 0.09f, 0.38f, 0.36f, 0.36f);
+        SEMConfigureInsectLegPair(&plan, 2, 0.09f, 0.44f, 0.36f, 0.58f);
+        SEMConfigureInsectLegPair(&plan, 3, 0.09f, 0.50f, 0.30f, 0.72f);
+    } else if (ant) {
+        plan.antennaScale = 1.45f;
+        plan.headX = 0.5f; plan.headY = 0.28f; plan.headRX = 0.065f; plan.headRY = 0.060f;
+        plan.thoraxX = 0.5f; plan.thoraxY = 0.42f; plan.thoraxRX = 0.070f; plan.thoraxRY = 0.090f;
+        plan.abdomenX = 0.5f; plan.abdomenY = 0.62f; plan.abdomenRX = 0.100f; plan.abdomenRY = 0.140f;
+        plan.legCount = 6;
+        plan.legRadius = 0.008f;
+        SEMConfigureInsectLegPair(&plan, 0, 0.05f, 0.39f, 0.22f, 0.30f);
+        SEMConfigureInsectLegPair(&plan, 1, 0.05f, 0.44f, 0.28f, 0.46f);
+        SEMConfigureInsectLegPair(&plan, 2, 0.05f, 0.49f, 0.22f, 0.62f);
+    } else if (beetle) {
+        plan.antennaScale = 1.15f;
+        plan.headX = 0.5f; plan.headY = 0.27f; plan.headRX = 0.070f; plan.headRY = 0.055f;
+        plan.thoraxX = 0.5f; plan.thoraxY = 0.37f; plan.thoraxRX = 0.100f; plan.thoraxRY = 0.065f;
+        plan.abdomenX = 0.5f; plan.abdomenY = 0.55f; plan.abdomenRX = 0.145f; plan.abdomenRY = 0.200f;
+        plan.legCount = 6;
+        plan.legRadius = 0.010f;
+        SEMConfigureInsectLegPair(&plan, 0, 0.07f, 0.36f, 0.26f, 0.28f);
+        SEMConfigureInsectLegPair(&plan, 1, 0.07f, 0.40f, 0.32f, 0.44f);
+        SEMConfigureInsectLegPair(&plan, 2, 0.07f, 0.44f, 0.30f, 0.62f);
+    } else {
+        plan.headX = 0.5f; plan.headY = 0.30f; plan.headRX = 0.085f; plan.headRY = 0.065f;
+        plan.thoraxX = 0.5f; plan.thoraxY = 0.42f; plan.thoraxRX = 0.115f; plan.thoraxRY = 0.095f;
+        plan.abdomenX = 0.5f; plan.abdomenY = 0.60f; plan.abdomenRX = 0.100f; plan.abdomenRY = 0.170f;
+        plan.legCount = 6;
+        plan.legRadius = 0.009f;
+        SEMConfigureInsectLegPair(&plan, 0, 0.07f, 0.40f, 0.28f, 0.32f);
+        SEMConfigureInsectLegPair(&plan, 1, 0.07f, 0.45f, 0.33f, 0.50f);
+        SEMConfigureInsectLegPair(&plan, 2, 0.07f, 0.50f, 0.27f, 0.68f);
+    }
+    return plan;
+}
+
+
 @implementation ProceduralSampleGenerator {
     id<MTLDevice> _device;
 }
@@ -120,6 +252,11 @@ static SEMWorley SEMWorleyNoise(float x, float y, uint32_t seed) {
     float fibers = (float)recipe.fibers;
     float grain = (float)recipe.grain;
     float meanZ = (float)recipe.meanZ;
+
+    SEMInsectPlan insectPlan = {0};
+    if ([templateName isEqualToString:@"insect"]) {
+        insectPlan = SEMInsectPlanForName(recipe.name);
+    }
 
     for (int y = 0; y < N; y++) {
         for (int x = 0; x < N; x++) {
@@ -204,6 +341,192 @@ static SEMWorley SEMWorleyNoise(float x, float y, uint32_t seed) {
                 float cell = SEMHash2((int)floorf(p * 9.0f), (int)floorf(q * 15.0f), seed + 27u);
                 h = 0.22f + ridge * 0.32f + cell * 0.14f + (n - 0.5f) * 0.08f * roughness;
                 z = SEMClampf(0.08f + ridge * 0.26f + cell * 0.18f, 0.03f, 0.65f);
+            } else if ([templateName isEqualToString:@"insect"]) {
+                float bodyH = 0.0f;
+                float bodyZ = 0.04f;
+
+                // Wings are thin membranes behind the body.
+                if (insectPlan.hasWings) {
+                    for (int side = -1; side <= 1; side += 2) {
+                        float wx = 0.5f + (float)side * 0.18f;
+                        float wy = 0.475f;
+                        float angle = (float)side * insectPlan.wingAngle;
+                        float lx = 0.0f;
+                        float ly = 0.0f;
+                        float wing = SEMRotatedEllipseMask(p, q, wx, wy,
+                                                           insectPlan.wingRX, insectPlan.wingRY,
+                                                           angle, 0.18f, &lx, &ly);
+                        if (wing > 0.0f) {
+                            float veins = 0.5f + 0.5f * sinf(ly * 150.0f + lx * 6.0f);
+                            float crossVeins = 0.5f + 0.5f * sinf(lx * 55.0f - ly * 18.0f);
+                            float vein = SEMSmooth(0.55f, 0.95f, veins) * 0.65f +
+                                         SEMSmooth(0.78f, 0.99f, crossVeins) * 0.35f;
+                            float membrane = wing * (0.12f + vein * 0.075f);
+                            if (membrane > bodyH) {
+                                bodyH = membrane;
+                                bodyZ = 0.10f;
+                            }
+                        }
+                    }
+                }
+
+                // Six or eight jointed legs.
+                float limbH = 0.0f;
+                for (int leg = 0; leg < insectPlan.legCount; leg++) {
+                    float ax = insectPlan.legStartX[leg];
+                    float ay = insectPlan.legStartY[leg];
+                    float bx = insectPlan.legEndX[leg];
+                    float by = insectPlan.legEndY[leg];
+                    float mx = (ax + bx) * 0.5f;
+                    float my = (ay + by) * 0.5f;
+                    float ox = mx - 0.5f;
+                    float oy = my - 0.45f;
+                    float olen = sqrtf(ox * ox + oy * oy);
+                    float bend = 0.032f;
+                    float kx = mx + (olen > 0.0001f ? ox / olen : 0.0f) * bend;
+                    float ky = my + (olen > 0.0001f ? oy / olen : 0.0f) * bend;
+                    float d = fminf(SEMSegmentDistance(p, q, ax, ay, kx, ky),
+                                    SEMSegmentDistance(p, q, kx, ky, bx, by));
+                    float r = insectPlan.legRadius;
+                    float tube = SEMSmooth(r, r * 0.25f, d);
+                    float knee = SEMSmooth(r * 1.7f, r * 0.4f,
+                                           sqrtf((p - kx) * (p - kx) + (q - ky) * (q - ky)));
+                    float foot = SEMSmooth(r * 1.6f, r * 0.5f,
+                                           sqrtf((p - bx) * (p - bx) + (q - by) * (q - by)));
+                    float value = tube * 0.14f + knee * 0.035f + foot * 0.020f;
+                    if (value > limbH) limbH = value;
+                }
+
+                // Antennae: an elbowed pair rising from the head.
+                if (insectPlan.hasAntennae) {
+                    float scale = insectPlan.antennaScale;
+                    float baseOffset = insectPlan.headRX * 0.40f;
+                    float baseY = insectPlan.headY - insectPlan.headRY * 0.72f;
+                    float reach = insectPlan.headRX * 2.0f * scale;
+                    float rise = insectPlan.headRY * 1.6f * scale;
+                    float r = 0.0034f + 0.0012f * scale;
+                    for (int side = -1; side <= 1; side += 2) {
+                        float sx = 0.5f + (float)side * baseOffset;
+                        float kx = 0.5f + (float)side * reach * 0.55f;
+                        float ky = baseY - rise * 0.55f;
+                        float ex = 0.5f + (float)side * reach;
+                        float ey = baseY - rise;
+                        float d = fminf(SEMSegmentDistance(p, q, sx, baseY, kx, ky),
+                                        SEMSegmentDistance(p, q, kx, ky, ex, ey));
+                        float tube = SEMSmooth(r, r * 0.25f, d);
+                        float club = SEMSmooth(r * 2.8f, r * 0.6f,
+                                               sqrtf((p - ex) * (p - ex) + (q - ey) * (q - ey)));
+                        float value = tube * 0.11f + club * 0.04f;
+                        if (value > limbH) limbH = value;
+                    }
+                }
+
+                if (limbH > bodyH) {
+                    bodyH = limbH;
+                    bodyZ = 0.20f;
+                }
+
+                // Head.
+                float d = SEMEllipseDistance(p, q, insectPlan.headX, insectPlan.headY,
+                                             insectPlan.headRX, insectPlan.headRY);
+                float mask = SEMSmooth(1.0f, 0.88f, d);
+                float part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.30f * mask;
+                part += (n - 0.5f) * 0.016f * roughness * mask;
+                if (part > bodyH) { bodyH = part; bodyZ = 0.30f; }
+
+                // Thorax with fine setae.
+                d = SEMEllipseDistance(p, q, insectPlan.thoraxX, insectPlan.thoraxY,
+                                       insectPlan.thoraxRX, insectPlan.thoraxRY);
+                mask = SEMSmooth(1.0f, 0.88f, d);
+                part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.34f * mask;
+                float setae = powf(0.5f + 0.5f * sinf(p * 240.0f + n * 9.0f) *
+                                   sinf(q * 240.0f + n * 7.0f), 10.0f);
+                part += setae * 0.014f * mask * (0.4f + roughness);
+                part += (n - 0.5f) * 0.014f * roughness * mask;
+                if (part > bodyH) { bodyH = part; bodyZ = 0.33f; }
+
+                // Abdomen with segment rings; beetle elytra get a split and striae.
+                d = SEMEllipseDistance(p, q, insectPlan.abdomenX, insectPlan.abdomenY,
+                                       insectPlan.abdomenRX, insectPlan.abdomenRY);
+                mask = SEMSmooth(1.0f, 0.90f, d);
+                part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.37f * mask;
+                float ringPhase = (q - (insectPlan.abdomenY - insectPlan.abdomenRY)) /
+                                  MAX(2.0f * insectPlan.abdomenRY, 0.0001f);
+                float rings = 0.5f + 0.5f * cosf(ringPhase * 6.2831853f * 7.0f);
+                part -= SEMSmooth(0.55f, 0.95f, rings) * 0.032f * mask;
+                if (insectPlan.splitElytra) {
+                    float split = 1.0f - SEMSmooth(0.0f, 0.009f, fabsf(p - 0.5f));
+                    part -= split * 0.10f * mask;
+                    float striae = 0.5f + 0.5f * sinf((p - 0.5f) * 180.0f);
+                    part -= SEMSmooth(0.82f, 0.99f, striae) * 0.014f * mask;
+                }
+                part += (n - 0.5f) * 0.014f * roughness * mask;
+                if (part > bodyH) { bodyH = part; bodyZ = 0.35f; }
+
+                // Ant waist.
+                if (insectPlan.hasWaist) {
+                    d = SEMEllipseDistance(p, q, 0.5f, 0.515f, 0.026f, 0.055f);
+                    mask = SEMSmooth(1.0f, 0.85f, d);
+                    part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.19f * mask;
+                    if (part > bodyH) { bodyH = part; bodyZ = 0.31f; }
+                }
+
+                // Compound eyes for flies, moths, and butterflies; simple eyes otherwise.
+                if (insectPlan.bigEyes) {
+                    for (int side = -1; side <= 1; side += 2) {
+                        float ex = insectPlan.headX + (float)side * insectPlan.headRX * 0.58f;
+                        float ey = insectPlan.headY - insectPlan.headRY * 0.05f;
+                        float erx = insectPlan.headRX * 0.48f;
+                        float ery = insectPlan.headRY * 0.80f;
+                        d = SEMEllipseDistance(p, q, ex, ey, erx, ery);
+                        mask = SEMSmooth(1.0f, 0.84f, d);
+                        part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.38f * mask;
+                        SEMWorley facets = SEMWorleyNoise(p * 190.0f, q * 190.0f, seed + 31u);
+                        float bump = 1.0f - SEMSmooth(0.08f, 0.55f, facets.f1);
+                        part += bump * 0.010f * mask;
+                        if (part > bodyH) { bodyH = part; bodyZ = 0.13f; }
+                    }
+                } else if (insectPlan.hasWaist || insectPlan.splitElytra) {
+                    for (int side = -1; side <= 1; side += 2) {
+                        float ex = insectPlan.headX + (float)side * insectPlan.headRX * 0.52f;
+                        float ey = insectPlan.headY;
+                        d = SEMEllipseDistance(p, q, ex, ey,
+                                               insectPlan.headRX * 0.28f,
+                                               insectPlan.headRY * 0.46f);
+                        mask = SEMSmooth(1.0f, 0.80f, d);
+                        part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.35f * mask;
+                        if (part > bodyH) { bodyH = part; bodyZ = 0.14f; }
+                    }
+                } else {
+                    // Spider: two pairs of simple eyes at the front of the cephalothorax.
+                    for (int side = -1; side <= 1; side += 2) {
+                        float ex = 0.5f + (float)side * 0.030f;
+                        float ey = 0.318f;
+                        d = SEMEllipseDistance(p, q, ex, ey, 0.012f, 0.012f);
+                        mask = SEMSmooth(1.0f, 0.72f, d);
+                        part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.36f * mask;
+                        if (part > bodyH) { bodyH = part; bodyZ = 0.12f; }
+                        ex = 0.5f + (float)side * 0.060f;
+                        ey = 0.338f;
+                        d = SEMEllipseDistance(p, q, ex, ey, 0.008f, 0.008f);
+                        mask = SEMSmooth(1.0f, 0.72f, d);
+                        part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.35f * mask;
+                        if (part > bodyH) { bodyH = part; bodyZ = 0.12f; }
+                    }
+                }
+
+                // Short proboscis below the head for fly-like insects.
+                if (insectPlan.bigEyes && !insectPlan.splitElytra) {
+                    d = SEMEllipseDistance(p, q, 0.5f,
+                                           insectPlan.headY + insectPlan.headRY * 0.95f,
+                                           0.018f, 0.042f);
+                    mask = SEMSmooth(1.0f, 0.72f, d);
+                    part = sqrtf(MAX(0.0f, 1.0f - d * d)) * 0.16f * mask;
+                    if (part > bodyH) { bodyH = part; bodyZ = 0.24f; }
+                }
+
+                h = bodyH;
+                z = bodyZ;
             } else {
                 SEMWorley w = SEMWorleyNoise(p * 9.0f, q * 9.0f, seed + 3u);
                 float ridged = 1.0f - fabsf(2.0f * SEMFbm(p * 4.0f, q * 4.0f, 5, seed + 7u) - 1.0f);

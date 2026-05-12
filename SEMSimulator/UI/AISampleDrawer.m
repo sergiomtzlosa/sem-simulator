@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSButton *saveSpecimenButton;
 @property (nonatomic, strong) NSButton *loadSpecimenFileButton;
 @property (nonatomic, strong) NSImageView *thumbnailView;
+@property (nonatomic, assign) BOOL reloadingOfflineModels;
 @property (nonatomic, strong) NSTextField *summaryLabel;
 @property (nonatomic, strong) NSTextField *statusLabel;
 @property (nonatomic, strong) NSProgressIndicator *spinner;
@@ -279,9 +280,15 @@
         }
     }
     if (self.builtInPopup.numberOfItems > 0) {
+        self.reloadingOfflineModels = YES;
         [self.builtInPopup selectItemAtIndex:selection];
+        self.reloadingOfflineModels = NO;
     }
-    [self builtInSelectionChanged:self.builtInPopup];
+
+    // Refresh the detail line only. Do not re-apply the selected preset's
+    // preview here: a save/import reload must not replace the thumbnail of the
+    // specimen that is currently loaded in the chamber.
+    [self updateOfflineDetail];
 }
 
 - (void)savedSpecimensChanged:(NSNotification *)notification {
@@ -334,15 +341,25 @@
 }
 
 - (void)builtInSelectionChanged:(id)sender {
+    [self updateOfflineDetail];
+    if (self.reloadingOfflineModels) return;
+
+    // Previewing an offline entry is an explicit browse action. When the user
+    // generates or loads a specimen, setSpecimen: replaces this preview with
+    // the live specimen thumbnail.
     SpecimenPreset *preset = [self selectedBuiltInPreset];
-    self.builtInDetailLabel.stringValue = preset
-        ? [NSString stringWithFormat:@"%@ · %@", preset.category, preset.detail]
-        : @"Built-in and saved models are available offline.";
     if (preset.previewImage) {
         self.thumbnailView.image = preset.previewImage;
     } else if (self.specimen) {
         self.thumbnailView.image = self.specimen.thumbnail;
     }
+}
+
+- (void)updateOfflineDetail {
+    SpecimenPreset *preset = [self selectedBuiltInPreset];
+    self.builtInDetailLabel.stringValue = preset
+        ? [NSString stringWithFormat:@"%@ · %@", preset.category, preset.detail]
+        : @"Built-in and saved models are available offline.";
 }
 
 - (void)requestGeneration {

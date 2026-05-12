@@ -34,6 +34,10 @@
     BOOL (^has)(NSString *) = ^BOOL(NSString *needle) {
         return [lower rangeOfString:needle].location != NSNotFound;
     };
+    BOOL (^word)(NSString *) = ^BOOL(NSString *needle) {
+        NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", needle];
+        return [lower rangeOfString:pattern options:NSRegularExpressionSearch].location != NSNotFound;
+    };
 
     if (has(@"pollen") || has(@"spore") || has(@"exine")) {
         r.templateName = @"pollen";
@@ -63,7 +67,7 @@
         r.conductive = NO;
         r.coatingRecommended = YES;
         r.scaleMicrometers = 90;
-    } else if (has(@"butterfly") || has(@"wing") || has(@"scale")) {
+    } else if (has(@"wing") || has(@"scale")) {
         r.templateName = @"wing";
         r.name = prompt.length > 0 ? prompt : @"Butterfly wing scales";
         r.pores = 0.12;
@@ -86,7 +90,7 @@
         r.conductive = NO;
         r.coatingRecommended = YES;
         r.scaleMicrometers = 200;
-    } else if (has(@"fiber") || has(@"fibre") || has(@"fibrous") || has(@"hair") || has(@"wire") || has(@"spicule") || has(@"siliceous")) {
+    } else if (has(@"fiber") || has(@"fibre") || has(@"fibrous") || has(@"hair") || has(@"wire") || has(@"spicule") || has(@"siliceous") || has(@"silk")) {
         r.templateName = @"fiber";
         r.name = prompt.length > 0 ? prompt : @"Fibrous composite";
         r.fibers = 0.85;
@@ -115,6 +119,32 @@
         r.roughness = 0.42;
         r.meanZ = 6.5;
         r.scaleMicrometers = 50;
+    } else if (word(@"insect") || word(@"bug") || word(@"arthropod") || word(@"fly") || word(@"ant") ||
+               word(@"bee") || word(@"wasp") || word(@"mite") || word(@"tick") || word(@"flea") ||
+               word(@"cricket") || word(@"aphid") || has(@"dragonfly") || has(@"housefly") ||
+               has(@"firefly") || has(@"butterfly") || has(@"beetle") || has(@"moth") ||
+               has(@"spider") || has(@"arachnid") || has(@"ladybug") || has(@"weevil") ||
+               has(@"grasshopper") || has(@"cockroach") || has(@"termite") || has(@"mosquito") ||
+               has(@"centipede") || has(@"millipede") || has(@"scorpion")) {
+        r.templateName = @"insect";
+        r.name = prompt.length > 0 ? prompt : @"House fly";
+        r.spikes = 0.10;
+        r.pores = 0.10;
+        r.roughness = 0.38;
+        r.cracks = 0.05;
+        r.fibers = 0.0;
+        r.grain = 0.25;
+        r.meanZ = 7.0;
+        r.conductive = NO;
+        r.coatingRecommended = YES;
+        r.scaleMicrometers = 800;
+        if (word(@"ant") || has(@"beetle") || has(@"ladybug") || has(@"weevil")) {
+            r.scaleMicrometers = 300;
+        } else if (has(@"spider") || has(@"arachnid") || word(@"mite") || word(@"tick")) {
+            r.scaleMicrometers = 200;
+        } else if (has(@"butterfly") || has(@"moth")) {
+            r.scaleMicrometers = 900;
+        }
     } else {
         BOOL corroded = has(@"rust") || has(@"steel") || has(@"corrosion");
         r.templateName = @"fracture";

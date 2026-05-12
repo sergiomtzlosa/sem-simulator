@@ -22,7 +22,7 @@ static NSError *RecipeError(NSString *message, NSInteger code) {
     static NSSet *set;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        set = [NSSet setWithArray:@[@"pollen", @"fracture", @"diatom", @"circuit", @"powder", @"crystal", @"fiber", @"tissue", @"foram", @"bone", @"wing"]];
+        set = [NSSet setWithArray:@[@"pollen", @"fracture", @"diatom", @"circuit", @"powder", @"crystal", @"fiber", @"tissue", @"foram", @"bone", @"wing", @"insect"]];
     });
     return set;
 }
@@ -42,7 +42,10 @@ static NSError *RecipeError(NSString *message, NSInteger code) {
         @[@"tissue", @"tissue"], @[@"cell", @"tissue"], @[@"bio", @"tissue"], @[@"bacteria", @"tissue"],
         @[@"bone", @"bone"], @[@"trabecul", @"bone"],
         @[@"foram", @"foram"], @[@"shell", @"foram"], @[@"marine", @"foram"], @[@"calcite", @"foram"],
-        @[@"wing", @"wing"], @[@"butterfly", @"wing"], @[@"insect", @"wing"], @[@"scale", @"wing"],
+        @[@"insect", @"insect"], @[@"arthropod", @"insect"], @[@"fly", @"insect"], @[@"beetle", @"insect"],
+        @[@"spider", @"insect"], @[@"arachnid", @"insect"], @[@"moth", @"insect"], @[@"bee", @"insect"],
+        @[@"wasp", @"insect"], @[@"ant", @"insect"], @[@"bug", @"insect"],
+        @[@"wing", @"wing"], @[@"butterfly", @"wing"], @[@"scale", @"wing"],
         @[@"fracture", @"fracture"], @[@"crack", @"fracture"], @[@"metal", @"fracture"], @[@"alloy", @"fracture"],
         @[@"steel", @"fracture"], @[@"rust", @"fracture"], @[@"ceramic", @"fracture"]
     ];

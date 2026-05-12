@@ -78,8 +78,10 @@
             @"Use exactly this structure:\n"
             @"{\"name\":\"short name\",\"template\":\"pollen\",\"features\":{\"spikes\":0.5,\"pores\":0.3,\"roughness\":0.4,\"cracks\":0.2,\"fibers\":0.1,\"grain\":0.3},\"material\":{\"meanZ\":14,\"conductive\":false,\"coatingRecommended\":true},\"scaleUm\":50}\n"
             @"Rules:\n"
-            @"- template must be exactly one of: pollen, diatom, circuit, powder, crystal, fiber, tissue, fracture, bone, foram, wing.\n"
+            @"- template must be exactly one of: pollen, diatom, circuit, powder, crystal, fiber, tissue, fracture, bone, foram, wing, insect.\n"
             @"- Choose the closest template for the specimen description.\n"
+            @"- Whole insects and other arthropods (fly, beetle, ant, bee, wasp, moth, butterfly, spider, tick, mite) must use template \"insect\".\n"
+            @"- Use template \"wing\" only when the description is specifically a wing, scales, or a wing surface.\n"
             @"- Metals, alloys, rusted steel, and fractured hard surfaces must use template \"fracture\", conductive true, coatingRecommended false.\n"
             @"- Biological, polymer, ceramic, and mineral specimens are usually non-conductive; set coatingRecommended true.\n"
             @"- features values must be numbers from 0 to 1.\n"
@@ -91,6 +93,7 @@
             @"Examples:\n"
             @"Description: fractured titanium alloy -> {\"name\":\"Ti alloy fracture\",\"template\":\"fracture\",\"features\":{\"spikes\":0,\"pores\":0.1,\"roughness\":0.5,\"cracks\":0.8,\"fibers\":0,\"grain\":0.4},\"material\":{\"meanZ\":22,\"conductive\":true,\"coatingRecommended\":false},\"scaleUm\":20}\n"
             @"Description: pollen grain -> {\"name\":\"Pollen grain\",\"template\":\"pollen\",\"features\":{\"spikes\":0.8,\"pores\":0.5,\"roughness\":0.3,\"cracks\":0.1,\"fibers\":0,\"grain\":0.2},\"material\":{\"meanZ\":7,\"conductive\":false,\"coatingRecommended\":true},\"scaleUm\":80}\n"
+            @"Description: house fly -> {\"name\":\"House fly\",\"template\":\"insect\",\"features\":{\"spikes\":0.1,\"pores\":0.1,\"roughness\":0.4,\"cracks\":0.05,\"fibers\":0,\"grain\":0.25},\"material\":{\"meanZ\":7,\"conductive\":false,\"coatingRecommended\":true},\"scaleUm\":800}\n"
             @"Specimen description: %@",
             description];
 }
@@ -142,6 +145,28 @@
         }
         recipe.seed = variation;
         if (recipe.name.length == 0) recipe.name = description;
+
+        // If the prompt clearly describes a whole arthropod, keep the insect
+        // body plan even when the model falls back to a texture template.
+        AISampleRecipe *localRecipe = [SemanticPromptParser recipeForPrompt:description variation:variation];
+        if ([localRecipe.templateName isEqualToString:@"insect"]) {
+            if (![recipe.templateName isEqualToString:@"insect"]) {
+                recipe.templateName = @"insect";
+                recipe.spikes = localRecipe.spikes;
+                recipe.pores = localRecipe.pores;
+                recipe.roughness = localRecipe.roughness;
+                recipe.cracks = localRecipe.cracks;
+                recipe.fibers = localRecipe.fibers;
+                recipe.grain = localRecipe.grain;
+                recipe.meanZ = localRecipe.meanZ;
+                recipe.conductive = localRecipe.conductive;
+                recipe.coatingRecommended = localRecipe.coatingRecommended;
+                recipe.scaleMicrometers = localRecipe.scaleMicrometers;
+            }
+            // Keep the subtype words (fly, beetle, ant, spider) so the
+            // generator chooses the matching body plan.
+            recipe.name = localRecipe.name.capitalizedString;
+        }
 
         [self generateSpecimenWithRecipe:recipe sourcePrompt:description completion:completion];
     }];

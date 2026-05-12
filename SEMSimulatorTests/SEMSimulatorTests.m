@@ -27,6 +27,9 @@
 #import "Theme.h"
 #import "VoltageSelectorView.h"
 
+static BOOL SEMImageHasVisibleContent(NSImage *image);
+static double SEMHeightZeroFraction(SEMSpecimen *specimen);
+
 static void SEMAdvance(SEMPhysicsEngine *engine, NSTimeInterval seconds) {
     const NSTimeInterval step = 0.25;
     NSInteger ticks = (NSInteger)ceil(seconds / step);
@@ -37,6 +40,10 @@ static void SEMAdvance(SEMPhysicsEngine *engine, NSTimeInterval seconds) {
 
 @interface OpenCodeIntegration (SEMTesting)
 + (NSArray<NSDictionary<NSString *, id> *> *)modelCandidatesFromJSON:(NSDictionary *)json;
+@end
+
+@interface AISampleDrawer (SEMTesting)
+- (void)builtInSelectionChanged:(id)sender;
 @end
 
 @interface SEMSimulatorTests : XCTestCase
@@ -372,6 +379,37 @@ static void SEMAdvance(SEMPhysicsEngine *engine, NSTimeInterval seconds) {
     XCTAssertGreaterThanOrEqual(porous.roughness, 0.72);
 }
 
+- (void)testInsectPromptsSelectInsectTemplate {
+    NSArray<NSString *> *prompts = @[
+        @"a fly", @"house fly", @"fruit fly", @"dragonfly", @"beetle", @"ladybug",
+        @"ant", @"bee", @"wasp", @"moth", @"butterfly", @"spider", @"arachnid",
+        @"grasshopper", @"cockroach", @"termite", @"mosquito", @"centipede", @"scorpion"
+    ];
+
+    for (NSString *prompt in prompts) {
+        AISampleRecipe *recipe = [SemanticPromptParser recipeForPrompt:prompt variation:9];
+        XCTAssertEqualObjects(recipe.templateName, @"insect", @"Prompt '%@' did not select insect", prompt);
+        XCTAssertFalse(recipe.conductive);
+        XCTAssertTrue(recipe.coatingRecommended);
+        XCTAssertEqualWithAccuracy(recipe.meanZ, 7.0, 0.001);
+    }
+}
+
+- (void)testWingPromptsStillSelectWingTemplate {
+    NSArray<NSString *> *prompts = @[@"butterfly wing scales", @"moth wing", @"insect wing", @"fly wing"];
+
+    for (NSString *prompt in prompts) {
+        AISampleRecipe *recipe = [SemanticPromptParser recipeForPrompt:prompt variation:10];
+        XCTAssertEqualObjects(recipe.templateName, @"wing", @"Prompt '%@' should remain a wing surface", prompt);
+    }
+}
+
+- (void)testInsectWordsDoNotMatchSubstrings {
+    XCTAssertEqualObjects([SemanticPromptParser recipeForPrompt:@"plant stem" variation:11].templateName, @"fracture");
+    XCTAssertEqualObjects([SemanticPromptParser recipeForPrompt:@"spider silk" variation:11].templateName, @"fiber");
+    XCTAssertEqualObjects([SemanticPromptParser recipeForPrompt:@"fly ash" variation:11].templateName, @"powder");
+}
+
 - (void)testEmptyPromptFallsBackToFracture {
     AISampleRecipe *recipe = [SemanticPromptParser recipeForPrompt:@"" variation:6];
 
@@ -540,6 +578,43 @@ static void SEMAdvance(SEMPhysicsEngine *engine, NSTimeInterval seconds) {
     [self waitForExpectationsWithTimeout:30 handler:nil];
 }
 
+- (void)testFlyPromptGeneratesCompactInsectSilhouette {
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    XCTAssertNotNil(device);
+    AISampleManager *manager = [[AISampleManager alloc] initWithDevice:device];
+
+    __block SEMSpecimen *fly = nil;
+    __block SEMSpecimen *pollen = nil;
+    XCTestExpectation *flyExpectation = [self expectationWithDescription:@"Fly generation"];
+    XCTestExpectation *pollenExpectation = [self expectationWithDescription:@"Pollen generation"];
+
+    [manager generateSpecimenForPrompt:@"a fly" variation:77 completion:^(SEMSpecimen *specimen, NSError *error) {
+        XCTAssertNotNil(specimen, @"Fly generation failed: %@", error);
+        XCTAssertEqualObjects(specimen.templateName, @"insect");
+        XCTAssertNotNil(specimen.thumbnail);
+        XCTAssertTrue(SEMImageHasVisibleContent(specimen.thumbnail));
+        fly = specimen;
+        [flyExpectation fulfill];
+    }];
+    [manager generateSpecimenForPrompt:@"pollen grain" variation:77 completion:^(SEMSpecimen *specimen, NSError *error) {
+        XCTAssertNotNil(specimen, @"Pollen generation failed: %@", error);
+        XCTAssertEqualObjects(specimen.templateName, @"pollen");
+        pollen = specimen;
+        [pollenExpectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:60 handler:nil];
+
+    double flyBackground = SEMHeightZeroFraction(fly);
+    double pollenBackground = SEMHeightZeroFraction(pollen);
+    XCTAssertGreaterThan(flyBackground, 0.55,
+                         @"A fly should leave a compact silhouette instead of filling the frame");
+    XCTAssertLessThan(pollenBackground, 0.45,
+                      @"A pollen grain should still cover most of the frame");
+    XCTAssertGreaterThan(flyBackground - pollenBackground, 0.20,
+                         @"Insect and pollen height maps should be clearly different");
+}
+
 - (void)testBuiltInModelRecipesSelectExpectedTemplates {
     NSDictionary<NSString *, NSString *> *expected = @{
         @"Pollen grain": @"pollen",
@@ -555,7 +630,8 @@ static void SEMAdvance(SEMPhysicsEngine *engine, NSTimeInterval seconds) {
         @"Rusted steel": @"fracture",
         @"Sponge spicule": @"fiber",
         @"Foraminifera": @"foram",
-        @"Butterfly wing": @"wing"
+        @"Butterfly wing": @"wing",
+        @"House fly": @"insect"
     };
 
     for (SpecimenPreset *preset in [SpecimenLibrary builtInModels]) {
@@ -567,7 +643,7 @@ static void SEMAdvance(SEMPhysicsEngine *engine, NSTimeInterval seconds) {
 }
 
 - (void)testNewTemplateNamesSurviveRecipeRoundTrip {
-    for (NSString *templateName in @[@"bone", @"foram", @"wing"]) {
+    for (NSString *templateName in @[@"bone", @"foram", @"wing", @"insect"]) {
         NSDictionary *dictionary = @{
             @"name": templateName,
             @"template": templateName,
@@ -834,6 +910,25 @@ static BOOL SEMImageHasVisibleContent(NSImage *image) {
         }
     }
     return maxLuminance > 12;
+}
+
+static double SEMHeightZeroFraction(SEMSpecimen *specimen) {
+    id<MTLTexture> texture = specimen.heightTexture;
+    if (!texture) return 0.0;
+    NSUInteger width = texture.width;
+    NSUInteger height = texture.height;
+    if (width == 0 || height == 0) return 0.0;
+
+    NSMutableData *data = [NSMutableData dataWithLength:width * height];
+    MTLRegion region = MTLRegionMake2D(0, 0, width, height);
+    [texture getBytes:data.mutableBytes bytesPerRow:width fromRegion:region mipmapLevel:0];
+
+    const uint8_t *bytes = data.bytes;
+    NSUInteger zeros = 0;
+    for (NSUInteger index = 0; index < width * height; index++) {
+        if (bytes[index] <= 2) zeros++;
+    }
+    return (double)zeros / (double)(width * height);
 }
 
 #pragma mark - Minimal HTTP stub for OpenCode tests
@@ -1561,6 +1656,10 @@ static NSError *SEMStubSocketError(NSString *operation) {
     MetalCRTView *crt = [controller valueForKey:@"crtView"];
     XCTAssertTrue([crt isKindOfClass:[MetalCRTView class]]);
     XCTAssertEqualObjects(crt.specimen.name, @"Stub salt crystals");
+    NSImageView *thumbnailView = [drawer valueForKey:@"thumbnailView"];
+    XCTAssertTrue([thumbnailView isKindOfClass:[NSImageView class]]);
+    XCTAssertEqual(thumbnailView.image, controller.engine.specimen.thumbnail,
+                   @"Drawer thumbnail did not update to the AI-generated specimen");
 
     SEMAdvance(controller.engine, 45.0);
     XCTAssertTrue(controller.engine.vacuumReady);
@@ -1647,6 +1746,52 @@ static NSError *SEMStubSocketError(NSString *operation) {
         [OpenCodeIntegration setServerURL:oldURL];
     } else {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:SEMOpenCodeURLDefaultsKey];
+    }
+}
+
+- (void)testOpenCodeInsectOverrideRejectsTextureTemplate {
+    NSString *recipe = @"{\"name\":\"Pollen-like blob\",\"template\":\"pollen\",\"features\":{\"spikes\":0.8,\"pores\":0.5,\"roughness\":0.3,\"cracks\":0.1,\"fibers\":0,\"grain\":0.2},\"material\":{\"meanZ\":7,\"conductive\":false,\"coatingRecommended\":true},\"scaleUm\":80}";
+
+    SEMStubHTTPServer *server = [[SEMStubHTTPServer alloc] init];
+    NSError *serverError = nil;
+    BOOL started = [server startWithHandler:^NSDictionary<NSString *, id> *(NSString *method, NSString *path, NSDictionary<NSString *, id> *body) {
+        if ([path isEqualToString:@"/api/experimental/generate/text"]) {
+            return @{@"status": @200, @"json": @{@"data": @{@"text": recipe}}};
+        }
+        return @{@"status": @404, @"json": @{@"message": @"not found"}};
+    } error:&serverError];
+    XCTAssertTrue(started, @"Could not start stub server: %@", serverError);
+
+    NSString *oldURL = [[NSUserDefaults standardUserDefaults] stringForKey:SEMOpenCodeURLDefaultsKey];
+    NSString *oldModel = [[NSUserDefaults standardUserDefaults] stringForKey:SEMOpenCodeModelDefaultsKey];
+    [OpenCodeIntegration setServerURL:server.baseURL];
+    [OpenCodeIntegration setConfiguredModel:@"opencode/stub-free"];
+
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    XCTAssertNotNil(device);
+    AISampleManager *manager = [[AISampleManager alloc] initWithDevice:device];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"insect override"];
+    [manager generateSpecimenUsingOpenCodeForPrompt:@"a fly" variation:13
+                                         completion:^(SEMSpecimen *specimen, NSError *error) {
+        XCTAssertNotNil(specimen, @"Insect override generation failed: %@", error);
+        XCTAssertNil(error);
+        XCTAssertEqualObjects(specimen.templateName, @"insect");
+        XCTAssertEqualObjects(specimen.name, @"A Fly");
+        XCTAssertGreaterThan(SEMHeightZeroFraction(specimen), 0.55);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:30 handler:nil];
+
+    [server stop];
+    if (oldURL.length > 0) {
+        [OpenCodeIntegration setServerURL:oldURL];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SEMOpenCodeURLDefaultsKey];
+    }
+    if (oldModel.length > 0) {
+        [OpenCodeIntegration setConfiguredModel:oldModel];
+    } else {
+        [OpenCodeIntegration setConfiguredModel:nil];
     }
 }
 
@@ -1801,9 +1946,14 @@ static NSError *SEMStubSocketError(NSString *operation) {
     specimen.conductive = YES;
     specimen.coatingRecommended = NO;
     specimen.sourcePrompt = @"salt crystals";
+    specimen.thumbnail = [self imageWithColor:[NSColor colorWithCalibratedRed:0.35 green:0.7 blue:0.4 alpha:1.0]
+                                         size:NSMakeSize(32, 32)];
+    return specimen;
+}
 
-    const NSInteger width = 32;
-    const NSInteger height = 32;
+- (NSImage *)imageWithColor:(NSColor *)color size:(NSSize)size {
+    NSInteger width = MAX(1, (NSInteger)size.width);
+    NSInteger height = MAX(1, (NSInteger)size.height);
     NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                    pixelsWide:width
                                                                    pixelsHigh:height
@@ -1814,16 +1964,14 @@ static NSError *SEMStubSocketError(NSString *operation) {
                                                                colorSpaceName:NSCalibratedRGBColorSpace
                                                                   bytesPerRow:0
                                                                  bitsPerPixel:0];
-    NSColor *green = [NSColor colorWithCalibratedRed:0.35 green:0.7 blue:0.4 alpha:1.0];
     for (NSInteger y = 0; y < height; y++) {
         for (NSInteger x = 0; x < width; x++) {
-            [rep setColor:green atX:x y:y];
+            [rep setColor:color atX:x y:y];
         }
     }
-    NSImage *thumbnail = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
-    [thumbnail addRepresentation:rep];
-    specimen.thumbnail = thumbnail;
-    return specimen;
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    [image addRepresentation:rep];
+    return image;
 }
 
 - (void)testSavedSpecimenStoreRoundTripWritesPreviewAndManagedCopy {
@@ -1883,6 +2031,41 @@ static NSError *SEMStubSocketError(NSString *operation) {
     XCTAssertEqual(reloaded.savedPresets.count, 1);
 
     [manager removeItemAtURL:directory error:NULL];
+}
+
+- (void)testReloadingOfflineModelsKeepsCurrentSpecimenThumbnail {
+    AISampleDrawer *drawer = [[AISampleDrawer alloc] initWithFrame:NSMakeRect(0, 0, 900, 260)];
+    [drawer layoutSubtreeIfNeeded];
+
+    NSPopUpButton *popup = [drawer valueForKey:@"builtInPopup"];
+    NSImageView *thumbnailView = [drawer valueForKey:@"thumbnailView"];
+    XCTAssertTrue([popup isKindOfClass:[NSPopUpButton class]]);
+    XCTAssertTrue([thumbnailView isKindOfClass:[NSImageView class]]);
+
+    SpecimenPreset *builtIn = [SpecimenLibrary builtInModels].firstObject;
+    XCTAssertNotNil(builtIn);
+    NSImage *offlinePreview = [self imageWithColor:[NSColor redColor] size:NSMakeSize(16, 16)];
+    builtIn.previewImage = offlinePreview;
+    @try {
+        // Browsing an offline entry shows its preview.
+        [popup selectItemAtIndex:0];
+        [drawer builtInSelectionChanged:popup];
+        XCTAssertEqual(thumbnailView.image, offlinePreview,
+                       @"Selecting an offline entry should preview its image");
+
+        // Generating a specimen replaces that preview with the live image.
+        SEMSpecimen *specimen = [self specimenForSavedFileTests];
+        [drawer setSpecimen:specimen];
+        XCTAssertEqual(thumbnailView.image, specimen.thumbnail);
+
+        // Saving or importing a file reloads the offline list. The reload must
+        // not put the selected offline preview back over the specimen image.
+        [drawer reloadOfflineModels];
+        XCTAssertEqual(thumbnailView.image, specimen.thumbnail,
+                       @"Reloading offline models replaced the current specimen image");
+    } @finally {
+        builtIn.previewImage = nil;
+    }
 }
 
 - (void)testSavedSpecimenStoreRejectsInvalidFiles {

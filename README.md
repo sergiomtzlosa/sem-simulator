@@ -19,7 +19,7 @@ The app is written entirely in Objective-C with AppKit and Metal. It has a proce
 - Persistent contamination marks after prolonged high-magnification scanning.
 - Procedural specimen generator with height, normal, and Z maps.
 - AI specimen drawer: describe a specimen, OpenCode returns a JSON recipe, and the maps are synthesized locally and loaded automatically.
-- Built-in specimen catalog with 14 ready-to-use models in the Specimen menu, the generator drawer, and Settings, always available offline.
+- Built-in specimen catalog with 15 ready-to-use models in the Specimen menu, the generator drawer, and Settings, always available offline.
 - Save any generated or loaded specimen to a `.semspecimen` file with its recipe, metadata, source prompt, seed, and preview image; load saved files back from disk and keep them in the offline list.
 - No remote image service; OpenCode supplies only a structured specimen recipe.
 - Live CRT status strip with magnification, voltage, detector, scan mode, working distance, and pressure.
@@ -114,13 +114,13 @@ The script requires Pillow and writes both the `.icns` bundle icon and the `docs
 
 ### Offline specimen models (built-in and saved)
 
-The app includes 14 ready-to-use models:
+The app includes 15 ready-to-use models:
 
 ```text
 Pollen grain · Diatom frustule · Fractured titanium · Microchip traces
 Volcanic ash · Salt crystals · Carbon fiber · Tissue section
 Bone trabeculae · Quartz sand · Rusted steel · Sponge spicule
-Foraminifera · Butterfly wing
+Foraminifera · Butterfly wing · House fly
 ```
 
 They are available in three places:
@@ -132,7 +132,7 @@ They are available in three places:
 To load one offline:
 
 1. Open **Settings > OFFLINE MODELS (BUILT-IN + SAVED)**, or open the specimen drawer and use its **OFFLINE** popup.
-2. Select one of the 14 built-in models. The detail line shows its category and description.
+2. Select one of the 15 built-in models. The detail line shows its category and description.
 3. Press **LOAD OFFLINE**.
 4. The app synthesizes the 2048x2048 height, normal, and Z maps locally, vents the chamber if needed, forces high voltage off, and loads the specimen.
 5. Loading starts the automatic vacuum sequence. Watch the status line for rough vacuum, diffusion-pump warm-up, and pump-down; **HV** turns on by itself when high vacuum is reached.

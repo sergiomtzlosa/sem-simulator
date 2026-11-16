@@ -11,7 +11,7 @@ permissions:
 env:
   PROJECT_NAME: SEMSimulator.xcodeproj
   SCHEME: SEMSimulator
-  APP_NAME: SEMSimulator
+  APP_NAME: SEM Simulator
   CONFIGURATION: Release
 
 jobs:
